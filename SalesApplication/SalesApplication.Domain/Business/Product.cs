@@ -1,5 +1,4 @@
-﻿using SalesApplication.Data.Repositories;
-using SalesApplication.Data.Responses;
+﻿using SalesApplication.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,7 +26,7 @@ namespace SalesApplication.Domain.Business
             this.Stock = initialStock;
             this._productRepository = productRepository;
         }
-        public async Task<ActionResponse> Persist()
+        public async Task<IActionResponse> Persist()
         {
             var result = await _productRepository.Add(this);
             return result;

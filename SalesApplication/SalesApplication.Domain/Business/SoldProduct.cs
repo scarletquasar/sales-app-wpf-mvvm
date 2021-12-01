@@ -1,4 +1,4 @@
-﻿using SalesApplication.Data.Repositories;
+﻿using SalesApplication.Abstractions;
 using SalesApplication.Domain.Exceptions;
 using SalesApplication.Domain.Hardcodes;
 using System;
@@ -11,8 +11,6 @@ namespace SalesApplication.Domain.Business
 {
     public class SoldProduct
     {
-        private readonly IRepository<Sale> _saleRepository;
-        private readonly IRepository<SoldProduct> _soldProductRepository;
         public int Id { get; set; }
         public Sale SaleEntity { get; set; }
         public int SaleId { get; set; }
@@ -29,7 +27,7 @@ namespace SalesApplication.Domain.Business
             SoldProduct soldProduct = new();
             //Verifica se o produto existe no banco de dados
             Product product = (await productRepository.Search(x => x.Id == productId)).FirstOrDefault();
-            if (product.Description is null)
+            if (product.Description == null)
             {
                 throw new EntityNotFoundException(ExceptionTexts.EntityNotFound(productId.ToString()));
             }

@@ -1,6 +1,8 @@
-﻿namespace SalesApplication.Data.Responses
+﻿using SalesApplication.Abstractions;
+
+namespace SalesApplication.Data.Responses
 {
-    public class ActionResponse
+    public class ActionResponse : IActionResponse
     {
         public bool Success { get; set; }
         public string Message { get; set; }

@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using SalesApplication.Data.Repositories;
-using SalesApplication.Data.Responses;
+using SalesApplication.Abstractions;
 
 namespace SalesApplication.Domain.Business
 {
@@ -16,7 +15,7 @@ namespace SalesApplication.Domain.Business
             this._customerRepository = customerRepository;
             this.Name = name;
         }
-        public async Task<ActionResponse> Persist()
+        public async Task<IActionResponse> Persist()
         {
             var result = await _customerRepository.Add(this);
             return result;

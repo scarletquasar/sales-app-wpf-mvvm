@@ -1,5 +1,4 @@
-﻿using SalesApplication.Data.Repositories;
-using SalesApplication.Data.Responses;
+﻿using SalesApplication.Abstractions;
 using SalesApplication.Domain.Exceptions;
 using SalesApplication.Domain.Hardcodes;
 using System;
@@ -39,7 +38,7 @@ namespace SalesApplication.Domain.Business
             Products.Add(soldProduct);
             return soldProduct;
         }
-        public async Task<ActionResponse> Persist()
+        public async Task<IActionResponse> Persist()
         {
             CreatedAt = DateTime.Now;
             TotalPrice = Products.Sum(x => x.TotalPrice);
