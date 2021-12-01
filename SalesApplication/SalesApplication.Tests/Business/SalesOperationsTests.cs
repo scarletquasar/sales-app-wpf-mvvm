@@ -18,17 +18,17 @@ namespace SalesApplication.Tests
         public async void CreateSale()
         {
             //Test Data + Fake data operations
-            IRepository<Customer> customerRepository = new Repository<Customer>(new GeneralContext(ContextOptions.Postgres()));
+            IRepository<Customer> customerRepository = new Repository<Customer>(new GeneralContext(ContextOptions.InMemory()));
             Customer customer = new("Cliente de teste", customerRepository);
             Customer recordedCustomer = (Customer)((ActionResponse)await customer.Persist()).Result;
 
-            IRepository<Product> productRepository = new Repository<Product>(new GeneralContext(ContextOptions.Postgres()));
+            IRepository<Product> productRepository = new Repository<Product>(new GeneralContext(ContextOptions.InMemory()));
             Product product = new("Produto de teste", 10.0, 9999, productRepository);
 
             IActionResponse operationResult = await product.Persist();
             Product recordedProduct = (Product)((ActionResponse)operationResult).Result;
 
-            IRepository<Sale> saleRepository = new Repository<Sale>(new GeneralContext(ContextOptions.Postgres()));
+            IRepository<Sale> saleRepository = new Repository<Sale>(new GeneralContext(ContextOptions.InMemory()));
             var sale = new Sale
             (
                 recordedCustomer.Id,
@@ -48,7 +48,7 @@ namespace SalesApplication.Tests
             int fetchedSaleId = saleFetch.Id;
 
             //Asserts
-            Assert.True(saleFetch.Products.Count > 0);
+            Assert.True(saleFetch.Products.Count == 1);
             Assert.True(recordedSaleId == fetchedSaleId);
             Assert.True(saleFinish.Success);
         }
