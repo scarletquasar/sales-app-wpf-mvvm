@@ -4,6 +4,7 @@ using SalesApplication.Domain.Business;
 using SalesApplication.Data.Repositories;
 using SalesApplication.Data.Responses;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace SalesApplication.Tests
 {
@@ -37,9 +38,11 @@ namespace SalesApplication.Tests
             };
 
             //Test Operation
-            customers.ForEach(async x => await x.Persist());
+
+            await Task.Run(() => customers.ForEach(async x => await x.Persist()));
             var customerList = (List<Customer>)await customerRepository.Search();
 
+            //Asserts
             Assert.True(customerList.Count == 4);
         }
     }
