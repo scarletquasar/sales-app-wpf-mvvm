@@ -8,7 +8,7 @@ using SalesApplication.Data.Responses;
 
 namespace SalesApplication.Data.Repositories
 {
-    class TestRepository<T> : IRepository<T>
+    public class TestRepository<T> : IRepository<T>
     {
         private readonly List<T> _content = new();
         public async Task<bool> Save()
@@ -26,9 +26,18 @@ namespace SalesApplication.Data.Repositories
         public async Task<ActionResponse> Add(T entity)
         {
             ActionResponse result = new();
-            return await Task.Run(() => {
-                _content.Add(entity);
-                result.Success = true;
+            return await Task.Run(async () => {
+                try
+                {
+                    _content.Add(entity);
+                    result.Result = (await Search()).LastOrDefault();
+                    result.Success = true;
+                }
+                catch
+                {
+                    result.Result = null;
+                    result.Success = false;
+                }
                 return result;
             });
         }
