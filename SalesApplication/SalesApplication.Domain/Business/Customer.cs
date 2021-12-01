@@ -8,7 +8,7 @@ namespace SalesApplication.Domain.Business
 {
     public class Customer
     {
-        private IRepository<Customer> _customerRepository;
+        private readonly IRepository<Customer> _customerRepository;
         public int Id { get; set; }
         public string Name { get; set; }
         public Customer(string name, IRepository<Customer> customerRepository)

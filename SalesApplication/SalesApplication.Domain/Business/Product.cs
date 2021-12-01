@@ -1,4 +1,6 @@
-﻿using System;
+﻿using SalesApplication.Data.Repositories;
+using SalesApplication.Data.Responses;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +10,7 @@ namespace SalesApplication.Domain.Business
 {
     public class Product
     {
+        private readonly IRepository<Product> _productRepository;
         public int Id { get; set; }
         public string Description { get; set; }
         public double Price { get; set; }
@@ -15,22 +18,24 @@ namespace SalesApplication.Domain.Business
         public Product(
             string description,
             double price,
-            int initialStock
+            int initialStock,
+            IRepository<Product> productRepository
         )
         {
             this.Description = description;
             this.Price = price;
             this.Stock = initialStock;
+            this._productRepository = productRepository;
         }
-        public async Task<Customer> Persist()
+        public async Task<ActionResponse> Persist()
         {
-            //TODO: Implementar funcionalidade de persistência no banco de dados
-            return null;
+            var result = await _productRepository.Add(this);
+            return result;
         }
         public async Task<bool> Exists(int productId)
         {
-            //TODO: Implementar funcionalidade de verificação
-            return false;
+            var result = (await _productRepository.Search(x => x.Id == productId)).FirstOrDefault();
+            return result.Description != null;
         }
     }
 }
