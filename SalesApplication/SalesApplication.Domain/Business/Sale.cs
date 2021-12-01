@@ -49,12 +49,19 @@ namespace SalesApplication.Domain.Business
         public async Task<ActionResponse> Persist()
         {
             var result = await _saleRepository.Add(this);
+
+            Products.ForEach(x => {
+                x.SaleEntity = this;
+                x.SaleId = this.Id;
+            });
+
+            await _soldProductRepository.Save();
             return result;
         }
-        public async Task<bool> Exists(int customerId)
+        public async Task<bool> Exists(int saleId)
         {
-            //TODO: Implementar funcionalidade de verificação
-            return false;
+            var result = (await _saleRepository.Search(x => x.Id == saleId)).FirstOrDefault();
+            return result.CustomerEntity != null;
         }
     }
 }
