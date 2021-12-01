@@ -32,15 +32,39 @@ namespace SalesApplication.Domain.Business
             this._saleRepository = saleRepository;
             this._productRepository = productRepository;
             this._soldProductRepository = soldProductRepository;
+            Products = new();
         }
         public async Task<SoldProduct> TryAddProduct(int productId, int quantity)
         {
-            SoldProduct soldProduct = await SoldProduct.GenerateValid(productId, quantity, _productRepository);
+            SoldProduct soldProduct = await SellProduct(productId, quantity);
             Products.Add(soldProduct);
+            return soldProduct;
+        }
+        public async Task<SoldProduct> SellProduct(int productId, int productQuantity)
+        {
+            SoldProduct soldProduct = new();
+            //Verifica se o produto existe no banco de dados
+            Product product = (await _productRepository.Search(x => x.Id == productId)).FirstOrDefault();
+            if (product == null)
+            {
+                throw new EntityNotFoundException(ExceptionTexts.EntityNotFound(productId.ToString()));
+            }
+
+            //Adiciona o produto ao objeto de produto vendido caso tenha estoque suficiente
+            if (product.Stock < productQuantity)
+            {
+                throw new OperationNotValidException(ExceptionTexts.NoStockAvailable(product.Description));
+            }
+
+            soldProduct.ProductId = product.Id;
+            soldProduct.ProductQuantity = productQuantity;
+            product.Stock -= productQuantity;
+
             return soldProduct;
         }
         public async Task<IActionResponse> Persist()
         {
+            await _productRepository.Save();
             CreatedAt = DateTime.Now;
             TotalPrice = Products.Sum(x => x.TotalPrice);
             var result = await _saleRepository.Add(this);

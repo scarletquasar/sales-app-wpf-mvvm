@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using SalesApplication.Abstractions;
 using SalesApplication.Database;
+using System.Linq;
 
 namespace SalesApplication.Tests
 {
@@ -44,6 +45,7 @@ namespace SalesApplication.Tests
 
             //Asserts
             Assert.True(productsList.Count == 4);
+            Assert.True(productsList.ElementAt(0).Id != 0);
         }
     }
 }

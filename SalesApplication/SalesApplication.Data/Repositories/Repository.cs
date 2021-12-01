@@ -21,7 +21,7 @@ namespace SalesApplication.Data.Repositories
         }
         public async Task<bool> Save()
         {
-            return await Task.Run(() => true);
+            return await _context.SaveChangesAsync() > 0;
         }
         public async Task<IEnumerable<T>> Search()
         {
@@ -29,7 +29,7 @@ namespace SalesApplication.Data.Repositories
         }
         public async Task<IEnumerable<T>> Search(Expression<Func<T, bool>> @where)
         {
-            return await Task.Run(() => _context.Set<T>().Where(@where.Compile()).ToList());
+            return await _context.Set<T>().Where(@where).ToListAsync();
         }
         public async Task<IActionResponse> Add(T entity)
         {

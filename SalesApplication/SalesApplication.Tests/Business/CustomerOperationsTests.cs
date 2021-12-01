@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using SalesApplication.Abstractions;
 using SalesApplication.Database;
+using System.Linq;
 
 namespace SalesApplication.Tests
 {
@@ -41,8 +42,11 @@ namespace SalesApplication.Tests
 
             //Test Operation
 
-            await Task.Run(() => customers.ForEach(async x => await x.Persist()));
-            var customerList = (List<Customer>)await customerRepository.Search();
+            foreach(var item in customers)
+            {
+                await item.Persist();
+            }
+            var customerList = (await customerRepository.Search()).ToList();
 
             //Asserts
             Assert.True(customerList.Count == 4);
