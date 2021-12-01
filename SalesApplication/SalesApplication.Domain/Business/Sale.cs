@@ -1,4 +1,8 @@
-﻿using System;
+﻿using SalesApplication.Data.Repositories;
+using SalesApplication.Data.Responses;
+using SalesApplication.Domain.Exceptions;
+using SalesApplication.Domain.Hardcodes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +12,10 @@ namespace SalesApplication.Domain.Business
 {
     public class Sale
     {
+        private readonly IRepository<Sale> _saleRepository;
+        private readonly IRepository<Product> _productRepository;
+        private readonly IRepository<Customer> _customerRepository;
+        private readonly IRepository<SoldProduct> _soldProductRepository;
         public int Id { get; set; }
         public List<SoldProduct> Products { get; set; }
         public DateTime CreatedAt { get; set; }
@@ -17,24 +25,31 @@ namespace SalesApplication.Domain.Business
         public Sale(
             int customerId,
             double totalPrice,
-            List<SoldProduct> products,
-            DateTime createdAt
+            DateTime createdAt,
+            IRepository<Sale> saleRepository,
+            IRepository<Product> productRepository,
+            IRepository<Customer> customerRepository,
+            IRepository<SoldProduct> soldProductRepository
         )
         {
             this.CustomerId = customerId;
             this.TotalPrice = totalPrice;
-            this.Products = products;
             this.CreatedAt = createdAt;
+            this._saleRepository = saleRepository;
+            this._productRepository = productRepository;
+            this._customerRepository = customerRepository;
+            this._soldProductRepository = soldProductRepository;
         }
-        public async Task<bool> TryAddProduct()
+        public async Task<SoldProduct> TryAddProduct(int productId, int quantity)
         {
-            //TODO: Implementar funcionalidade de persistência no banco de dados
-            return false;
+            SoldProduct soldProduct = await SoldProduct.GenerateValid(productId, quantity, _productRepository);
+            Products.Add(soldProduct);
+            return soldProduct;
         }
-        public async Task<Customer> Persist()
+        public async Task<ActionResponse> Persist()
         {
-            //TODO: Implementar funcionalidade de persistência no banco de dados
-            return null;
+            var result = await _saleRepository.Add(this);
+            return result;
         }
         public async Task<bool> Exists(int customerId)
         {
