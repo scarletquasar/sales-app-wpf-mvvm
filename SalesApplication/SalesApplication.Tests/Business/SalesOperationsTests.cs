@@ -28,18 +28,27 @@ namespace SalesApplication.Tests
             IActionResponse operationResult = await product.Persist();
             Product recordedProduct = (Product)((ActionResponse)operationResult).Result;
 
+            IRepository<Sale> saleRepository = new Repository<Sale>(new GeneralContext(ContextOptions.InMemory()));
             var sale = new Sale
             (
                 recordedCustomer.Id,
-                new Repository<Sale>(new GeneralContext(ContextOptions.InMemory())),
+                saleRepository,
                 productRepository,
                 new Repository<SoldProduct>(new GeneralContext(ContextOptions.InMemory()))
             );
 
-            var addProductToSale = await sale.TryAddProduct(recordedProduct.Id, recordedProduct.Stock);
-            var saleFinish = await sale.Persist();
+            
 
-            Assert.True(recordedProduct.Id != 0);
+            var addProductToSale = await sale.TryAddProduct(recordedProduct.Id, recordedProduct.Stock);
+            var saleFinish = (ActionResponse)await sale.Persist();
+            int recordedSaleId = ((Sale)saleFinish.Result).Id;
+
+            var saleFetch = (await saleRepository.Search()).ElementAt(0);
+            int fetchedSaleId = saleFetch.Id;
+
+            //Asserts
+            Assert.True(saleFetch.Products.Count > 0);
+            Assert.True(recordedSaleId == fetchedSaleId);
             Assert.True(((ActionResponse)saleFinish).Success);
         }
     }
