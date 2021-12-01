@@ -59,6 +59,7 @@ namespace SalesApplication.Domain.Business
                 throw new OperationNotValidException(ExceptionTexts.NoStockAvailable(product.Description));
             }
 
+            soldProduct.TotalPrice = product.Price * productQuantity;
             soldProduct.ProductId = product.Id;
             soldProduct.ProductQuantity = productQuantity;
             product.Stock -= productQuantity;
@@ -68,13 +69,13 @@ namespace SalesApplication.Domain.Business
         public async Task<IActionResponse> Persist()
         {
             //Verifica se o cliente existe
-            Customer customer = (await _customerRepository.Search(x => x.Id == CustomerId)).FirstOrDefault();
-            if (customer == null)
-            {
-                throw new EntityNotFoundException(ExceptionTexts.EntityNotFound(CustomerId.ToString()));
-            }
+            //Customer customer = (await _customerRepository.Search(x => x.Id == CustomerId)).FirstOrDefault();
+            //if (customer == null)
+            //{
+            //    throw new EntityNotFoundException(ExceptionTexts.EntityNotFound(CustomerId.ToString()));
+            //}
 
-            CustomerEntity = customer;
+            //CustomerEntity = customer;
 
             await _productRepository.Save();
 
@@ -87,7 +88,11 @@ namespace SalesApplication.Domain.Business
                 x.SaleId = this.Id;
             });
 
-            await _soldProductRepository.Save();
+            foreach (SoldProduct product in Products)
+            {
+                await _soldProductRepository.Add(product);
+            }
+
             return result;
         }
         public async Task<bool> Exists(int saleId)

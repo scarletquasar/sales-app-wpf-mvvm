@@ -49,7 +49,6 @@ namespace SalesApplication.Database
                 entity.Property(s => s.TotalPrice).HasColumnName("total_amount");
                 entity.Property(s => s.CustomerId).HasColumnName("client_id");
                 entity.Property(s => s.CreatedAt).HasColumnName("sale_date");
-
                 entity.Navigation(s => s.Products).UsePropertyAccessMode(PropertyAccessMode.Property);
             });
         }
@@ -61,6 +60,7 @@ namespace SalesApplication.Database
                 entity.ToTable("SoldProducts");
                 entity.HasKey(p => p.Id).HasName("id");
                 entity.Property(p => p.Id).HasColumnName("id").ValueGeneratedOnAdd();
+                entity.Property(p => p.SaleId).HasColumnName("sale_id");
                 entity.HasOne(p => p.SaleEntity).WithMany(p => p.Products).HasForeignKey(p => p.SaleId);
                 entity.Property(p => p.ProductId).HasColumnName("product_id");
                 entity.Property(p => p.TotalPrice).HasColumnName("product_price");

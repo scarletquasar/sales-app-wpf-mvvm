@@ -18,36 +18,37 @@ namespace SalesApplication.Tests
         public async void CreateSale()
         {
             //Test Data + Fake data operations
-            IRepository<Customer> customerRepository = new Repository<Customer>(new GeneralContext(ContextOptions.InMemory()));
+            IRepository<Customer> customerRepository = new Repository<Customer>(new GeneralContext(ContextOptions.Postgres()));
             Customer customer = new("Cliente de teste", customerRepository);
             Customer recordedCustomer = (Customer)((ActionResponse)await customer.Persist()).Result;
 
-            IRepository<Product> productRepository = new Repository<Product>(new GeneralContext(ContextOptions.InMemory()));
+            IRepository<Product> productRepository = new Repository<Product>(new GeneralContext(ContextOptions.Postgres()));
             Product product = new("Produto de teste", 10.0, 9999, productRepository);
 
             IActionResponse operationResult = await product.Persist();
             Product recordedProduct = (Product)((ActionResponse)operationResult).Result;
 
-            IRepository<Sale> saleRepository = new Repository<Sale>(new GeneralContext(ContextOptions.InMemory()));
+            IRepository<Sale> saleRepository = new Repository<Sale>(new GeneralContext(ContextOptions.Postgres()));
             var sale = new Sale
             (
                 recordedCustomer.Id,
                 saleRepository,
                 productRepository,
-                new Repository<SoldProduct>(new GeneralContext(ContextOptions.InMemory())),
+                new Repository<SoldProduct>(new GeneralContext(ContextOptions.Postgres())),
                 customerRepository
             );
 
             var addProductToSale = await sale.TryAddProduct(recordedProduct.Id, recordedProduct.Stock);
             var saleFinish = (ActionResponse)await sale.Persist();
+
+            
             int recordedSaleId = ((Sale)saleFinish.Result).Id;
 
-            var saleFetch = (await saleRepository.Search()).ElementAt(0);
+            var saleFetch = (await saleRepository.Search(x => x.Id == recordedSaleId)).FirstOrDefault();
             int fetchedSaleId = saleFetch.Id;
 
             //Asserts
             Assert.True(saleFetch.Products.Count > 0);
-            Assert.True(saleFetch.CustomerEntity.Name == "Cliente de teste");
             Assert.True(recordedSaleId == fetchedSaleId);
             Assert.True(saleFinish.Success);
         }
