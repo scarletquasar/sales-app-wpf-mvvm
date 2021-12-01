@@ -34,10 +34,9 @@ namespace SalesApplication.Tests
                 recordedCustomer.Id,
                 saleRepository,
                 productRepository,
-                new Repository<SoldProduct>(new GeneralContext(ContextOptions.InMemory()))
+                new Repository<SoldProduct>(new GeneralContext(ContextOptions.InMemory())),
+                customerRepository
             );
-
-            
 
             var addProductToSale = await sale.TryAddProduct(recordedProduct.Id, recordedProduct.Stock);
             var saleFinish = (ActionResponse)await sale.Persist();
@@ -48,8 +47,9 @@ namespace SalesApplication.Tests
 
             //Asserts
             Assert.True(saleFetch.Products.Count > 0);
+            Assert.True(saleFetch.CustomerEntity.Name == "Cliente de teste");
             Assert.True(recordedSaleId == fetchedSaleId);
-            Assert.True(((ActionResponse)saleFinish).Success);
+            Assert.True(saleFinish.Success);
         }
     }
 }

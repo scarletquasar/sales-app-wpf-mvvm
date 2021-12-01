@@ -13,6 +13,7 @@ namespace SalesApplication.Domain.Business
     {
         private readonly IRepository<Sale> _saleRepository;
         private readonly IRepository<Product> _productRepository;
+        private readonly IRepository<Customer> _customerRepository;
         private readonly IRepository<SoldProduct> _soldProductRepository;
         public int Id { get; set; }
         public List<SoldProduct> Products { get; set; }
@@ -25,13 +26,15 @@ namespace SalesApplication.Domain.Business
             int customerId,
             IRepository<Sale> saleRepository,
             IRepository<Product> productRepository,
-            IRepository<SoldProduct> soldProductRepository
+            IRepository<SoldProduct> soldProductRepository,
+            IRepository<Customer> customerRepository
         )
         {
             this.CustomerId = customerId;
             this._saleRepository = saleRepository;
             this._productRepository = productRepository;
             this._soldProductRepository = soldProductRepository;
+            this._customerRepository = customerRepository;
             Products = new();
         }
         public async Task<SoldProduct> TryAddProduct(int productId, int quantity)
@@ -64,7 +67,17 @@ namespace SalesApplication.Domain.Business
         }
         public async Task<IActionResponse> Persist()
         {
+            //Verifica se o cliente existe
+            Customer customer = (await _customerRepository.Search(x => x.Id == CustomerId)).FirstOrDefault();
+            if (customer == null)
+            {
+                throw new EntityNotFoundException(ExceptionTexts.EntityNotFound(CustomerId.ToString()));
+            }
+
+            CustomerEntity = customer;
+
             await _productRepository.Save();
+
             CreatedAt = DateTime.Now;
             TotalPrice = Products.Sum(x => x.TotalPrice);
             var result = await _saleRepository.Add(this);
