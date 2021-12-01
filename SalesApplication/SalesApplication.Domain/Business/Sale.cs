@@ -26,10 +26,20 @@ namespace SalesApplication.Domain.Business
             this.Products = products;
             this.CreatedAt = createdAt;
         }
+        public async Task<bool> TryAddProduct()
+        {
+            //TODO: Implementar funcionalidade de persistência no banco de dados
+            return false;
+        }
         public async Task<Customer> Persist()
         {
             //TODO: Implementar funcionalidade de persistência no banco de dados
             return null;
+        }
+        public async Task<bool> Exists(int customerId)
+        {
+            //TODO: Implementar funcionalidade de verificação
+            return false;
         }
     }
 }

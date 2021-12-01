@@ -16,5 +16,10 @@ namespace SalesApplication.Domain.Business
             //TODO: Implementar funcionalidade de persistência no banco de dados
             return null;
         }
+        public async Task<bool> Exists(int customerId)
+        {
+            //TODO: Implementar funcionalidade de verificação
+            return false;
+        }
     }
 }
