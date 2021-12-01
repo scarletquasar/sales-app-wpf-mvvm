@@ -30,6 +30,7 @@ namespace SalesApplication.Data.Repositories
                 try
                 {
                     _content.Add(entity);
+                    await Save();
                     result.Result = (await Search()).LastOrDefault();
                     result.Success = true;
                 }
