@@ -1,4 +1,4 @@
-﻿using SalesApplication.Domain.Responses;
+﻿using SalesApplication.Data.Responses;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;

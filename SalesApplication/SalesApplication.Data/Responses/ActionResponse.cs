@@ -1,4 +1,4 @@
-﻿namespace SalesApplication.Domain.Responses
+﻿namespace SalesApplication.Data.Responses
 {
     public class ActionResponse
     {

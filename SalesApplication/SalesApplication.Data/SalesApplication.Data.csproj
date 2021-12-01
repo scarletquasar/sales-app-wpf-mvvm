@@ -8,8 +8,4 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.12" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\SalesApplication.Domain\SalesApplication.Domain.csproj" />
-  </ItemGroup>
-
 </Project>

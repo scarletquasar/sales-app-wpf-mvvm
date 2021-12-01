@@ -4,8 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
-using SalesApplication.Domain;
-using SalesApplication.Domain.Responses;
+using SalesApplication.Data.Responses;
 
 namespace SalesApplication.Data.Repositories
 {
