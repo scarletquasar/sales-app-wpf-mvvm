@@ -29,26 +29,24 @@ namespace SalesApplication.Data.Repositories
         }
         public async Task<IEnumerable<T>> Search(Expression<Func<T, bool>> @where)
         {
-            return await Task.Run(() => _content.Where(@where.Compile()).ToList());
+            return await Task.Run(() => _context.Set<T>().Where(@where.Compile()).ToList());
         }
         public async Task<IActionResponse> Add(T entity)
         {
-            IActionResponse result = new ActionResponse();
-            return await Task.Run(async () => {
-                try
-                {
-                    _content.Add(entity);
-                    await Save();
-                    result.Result = (await Search()).LastOrDefault();
-                    result.Success = true;
-                }
-                catch
-                {
-                    result.Result = null;
-                    result.Success = false;
-                }
-                return result;
-            });
+            ActionResponse result = new();
+            try
+            {
+                var resultEntry = await _context.Set<T>().AddAsync(entity);
+                await Save();
+                result.Result = resultEntry.Entity;
+                result.Success = true;
+            }
+            catch
+            {
+                result.Result = null;
+                result.Success = false;
+            }
+            return result;
         }
     }
 }
