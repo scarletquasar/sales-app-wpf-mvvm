@@ -1,10 +1,11 @@
 ﻿using System;
 using Xunit;
 using SalesApplication.Domain.Business;
-using SalesApplication.Data.Repositories;
-using SalesApplication.Data.Responses;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using SalesApplication.Abstractions;
+using SalesApplication.Data.Repositories;
+using SalesApplication.Database;
 
 namespace SalesApplication.Tests
 {
@@ -15,23 +16,23 @@ namespace SalesApplication.Tests
         public async void CreateSale()
         {
             //Test Data + Fake data operations
-            IRepository<Customer> customerRepository = new TestRepository<Customer>();
+            IRepository<Customer> customerRepository = new Repository<Customer>(new GeneralContext(ContextOptions.InMemory()));
             Customer customer = new("Cliente de teste", customerRepository);
-            Customer recordedCustomer = (Customer)(await customer.Persist()).Result;
+            Customer recordedCustomer = (Customer)(await customer.Persist());
 
-            IRepository<Product> productRepository = new TestRepository<Product>();
+            IRepository<Product> productRepository = new Repository<Product>(new GeneralContext(ContextOptions.InMemory()));
             Product product = new("Produto de teste", 10.0, 9999, productRepository);
-            Product recordedProduct = (Product)(await product.Persist()).Result;
+            Product recordedProduct = (Product)(await product.Persist());
 
             var sale = new Sale
             (
-                ((Customer)recordedCustomer).Id,
-                new TestRepository<Sale>(),
-                new TestRepository<Product>(),
-                new TestRepository<SoldProduct>()
+                recordedCustomer.Id,
+                new Repository<Sale>(new GeneralContext(ContextOptions.InMemory())),
+                new Repository<Product>(new GeneralContext(ContextOptions.InMemory())),
+                new Repository<SoldProduct>(new GeneralContext(ContextOptions.InMemory()))
             );
 
-            var addProductToSale = await sale.TryAddProduct(((Product)recordedProduct).Id, ((Product)recordedProduct).Stock);
+            var addProductToSale = await sale.TryAddProduct(recordedProduct.Id, recordedProduct.Stock);
             var saleFinish = await sale.Persist();
 
             Assert.True(((Product)recordedProduct).Id != 0);

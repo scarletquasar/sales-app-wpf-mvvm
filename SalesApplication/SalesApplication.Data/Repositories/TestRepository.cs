@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using SalesApplication.Abstractions;
 using SalesApplication.Data.Responses;
 
 namespace SalesApplication.Data.Repositories
@@ -23,7 +24,7 @@ namespace SalesApplication.Data.Repositories
         {
             return await Task.Run(() => _content.Where(@where.Compile()).ToList());
         }
-        public async Task<ActionResponse> Add(T entity)
+        public async Task<IActionResponse> Add(T entity)
         {
             ActionResponse result = new();
             return await Task.Run(async () => {

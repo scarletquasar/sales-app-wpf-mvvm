@@ -18,6 +18,7 @@ namespace SalesApplication.Domain.Business
         public Product ProductEntity { get; set; }
         public int ProductId { get; set; }
         public int ProductQuantity { get; set; }
+        public SoldProduct() { }
         public static async Task<SoldProduct> GenerateValid(
             int productId,
             int productQuantity,

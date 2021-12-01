@@ -41,8 +41,9 @@ namespace SalesApplication.Data.Repositories
                 result.Result = resultEntry.Entity;
                 result.Success = true;
             }
-            catch
+            catch(Exception e)
             {
+                result.Message = e.ToString();
                 result.Result = null;
                 result.Success = false;
             }

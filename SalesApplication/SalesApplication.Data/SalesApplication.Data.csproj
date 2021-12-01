@@ -8,4 +8,9 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.12" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\SalesApplication.Abstractions\SalesApplication.Abstractions.csproj" />
+    <ProjectReference Include="..\SalesApplication.Database\SalesApplication.Database.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -10,6 +10,7 @@ namespace SalesApplication.Domain.Business
         private readonly IRepository<Customer> _customerRepository;
         public int Id { get; set; }
         public string Name { get; set; }
+        public Customer() { }
         public Customer(string name, IRepository<Customer> customerRepository)
         {
             this._customerRepository = customerRepository;

@@ -5,6 +5,8 @@ using SalesApplication.Data.Repositories;
 using SalesApplication.Data.Responses;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using SalesApplication.Abstractions;
+using SalesApplication.Database;
 
 namespace SalesApplication.Tests
 {
@@ -14,22 +16,22 @@ namespace SalesApplication.Tests
         public async void CreateProduct()
         {
             //Test Data
-            IRepository<Product> productRepository = new TestRepository<Product>();
+            IRepository<Product> productRepository = new Repository<Product>(new GeneralContext(ContextOptions.InMemory()));
             var product = new Product("Produto de teste", 10.0, 9999, productRepository);
 
             //Test Operation
-            ActionResponse operationResult = await product.Persist();
+            IActionResponse operationResult = await product.Persist();
 
             //Asserts
-            Assert.NotNull(operationResult.Result);
-            Assert.True(operationResult.Success);
+            Assert.NotNull(((ActionResponse)operationResult).Result);
+            Assert.True(((ActionResponse)operationResult).Success);
         }
 
         [Fact(DisplayName = "Deve obter com sucesso uma lista de produtos existentes")]
         public async void FetchProducts()
         {
             //Test Data
-            IRepository<Product> productRepository = new TestRepository<Product>();
+            IRepository<Product> productRepository = new Repository<Product>(new GeneralContext(ContextOptions.InMemory()));
             var products = new List<Product>() {
                 new Product("Produto de teste", 10.0, 9999, productRepository),
                 new Product("Produto de teste", 10.0, 9999, productRepository),

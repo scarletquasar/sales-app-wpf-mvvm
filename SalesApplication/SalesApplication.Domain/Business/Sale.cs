@@ -20,6 +20,7 @@ namespace SalesApplication.Domain.Business
         public Customer CustomerEntity { get; set; }
         public int CustomerId { get; set; }
         public double TotalPrice { get; set; }
+        public Sale() { }
         public Sale(
             int customerId,
             IRepository<Sale> saleRepository,

@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.12" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.4" />
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
@@ -20,6 +21,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SalesApplication.Abstractions\SalesApplication.Abstractions.csproj" />
+    <ProjectReference Include="..\SalesApplication.Database\SalesApplication.Database.csproj" />
+    <ProjectReference Include="..\SalesApplication.Data\SalesApplication.Data.csproj" />
     <ProjectReference Include="..\SalesApplication.Domain\SalesApplication.Domain.csproj" />
   </ItemGroup>
 
