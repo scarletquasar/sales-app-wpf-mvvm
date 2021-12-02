@@ -11,7 +11,6 @@ using System.Linq;
 
 namespace SalesApplication.Tests
 {
-    //Todo: Implementar banco em memória para permitir testes 
     public class SalesOperationsTests
     {
         [Fact(DisplayName = "Deve criar uma venda com sucesso")]
