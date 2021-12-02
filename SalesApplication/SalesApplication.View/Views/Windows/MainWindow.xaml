@@ -8,15 +8,21 @@
         xmlns:local="clr-namespace:SalesApplication.View"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
-        Title="Sistema de gerenciamento de vendas" Height="600" Width="800">
+        Title="Sistema de gerenciamento de vendas" Height="480" Width="640">
     <Grid>
         <Viewbox StretchDirection="DownOnly" VerticalAlignment="Top" HorizontalAlignment="Left">
-            <TabControl FontSize="12">
-                <TabItem Header="TabItem">
-                    <Grid Background="#FFE5E5E5"/>
+            <TabControl>
+                <TabControl.Resources>
+                    <Style TargetType="{x:Type TabItem}">
+                        <Setter Property="FontFamily" Value="Trebuchet MS" />
+                        <Setter Property="FontSize" Value="14" />
+                    </Style>
+                </TabControl.Resources>
+                <TabItem Header="Dashboard">
+                    <Grid Background="#E8E8E8"/>
                 </TabItem>
-                <TabItem Header="TabItem">
-                    <Grid Background="#FFE5E5E5"/>
+                <TabItem Header="Relatórios">
+                    <Grid Background="#E8E8E8"/>
                 </TabItem>
             </TabControl>
         </Viewbox>
