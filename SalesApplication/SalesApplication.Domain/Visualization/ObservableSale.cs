@@ -16,14 +16,14 @@ namespace SalesApplication.Domain.Visualization
         public int IdCliente { get; set; }
         public string NomeCliente { get; set; }
         public double PreçoTotal { get; set; }
-        public async Task Populate(int id, IRepository<Sale> saleRepository)
+        public async Task Populate(int id, IRepository<Sale> saleRepository, IRepository<Customer> customerRepository)
         {
             Sale sale = (await saleRepository.Search(x => x.Id == id)).FirstOrDefault();
             if (sale != null)
             {
                 Id = sale.Id;
                 IdCliente = sale.CustomerId;
-                NomeCliente = sale.CustomerEntity.Name;
+                NomeCliente = (await customerRepository.Search(x => x.Id == sale.CustomerId)).FirstOrDefault().Name;
                 PreçoTotal = sale.TotalPrice;
             }
             else

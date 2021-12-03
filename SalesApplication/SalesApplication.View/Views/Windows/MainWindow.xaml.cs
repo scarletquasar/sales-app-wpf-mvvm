@@ -23,11 +23,19 @@ namespace SalesApplication.View
     /// </summary>
     public partial class MainWindow : MetroWindow
     {
+        private readonly SalesViewModel salesViewModel;
         public MainWindow()
         {
             InitializeComponent();
             ControlInversion.RegisterDependencies();
-            salesGrid.ItemsSource = new SalesViewModel(ControlInversion.SaleService()).Sales;
+            salesViewModel = new (ControlInversion.SaleService(), ControlInversion.CustomerService());
+            salesGrid.ItemsSource = salesViewModel.Sales;
+        }
+
+        public async void SearchSalesButtonAction(object sender, RoutedEventArgs e)
+        {
+            await salesViewModel.GetSales();
+            salesGrid.ItemsSource = salesViewModel.Sales;
         }
     }
 }

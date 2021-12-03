@@ -5,41 +5,45 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:SalesApplication.View"
+        xmlns:local="clr-namespace:SalesApplication.View" xmlns:viewmodels="clr-namespace:SalesApplication.View.ViewModels" 
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
         Title="Sistema de gerenciamento de vendas" Height="480" Width="640">
     <Viewbox VerticalAlignment="Top" HorizontalAlignment="Left">
-        <Grid Width="720">
-        <TabControl>
-            <TabControl.Resources>
-                <Style TargetType="{x:Type TabItem}">
-                    <Setter Property="FontFamily" Value="Trebuchet MS" />
-                    <Setter Property="FontSize" Value="14" />
-                </Style>
-            </TabControl.Resources>
-            <TabItem Header="Vendas">
-                <Grid Background="#E8E8E8">
-                    <DataGrid Name="salesGrid">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Binding="{Binding Id}" Header="Id da venda"/>
-                            <DataGridTextColumn Binding="{Binding IdCliente}" Header="Id do cliente"/>
-                            <DataGridTextColumn Binding="{Binding Nome}" Header="Nome do cliente"/>
-                            <DataGridTextColumn Binding="{Binding PreçoTotal}" Header="Preço Total"/>
-                        </DataGrid.Columns>
-                    </DataGrid>
-                </Grid>
-            </TabItem>
-            <TabItem Header="Produtos">
-                <Grid Background="#E8E8E8"/>
-            </TabItem>
-            <TabItem Header="Clientes">
-                <Grid Background="#E8E8E8"/>
-            </TabItem>
-            <TabItem Header="Relatórios">
-                <Grid Background="#E8E8E8"/>
-            </TabItem>
-        </TabControl>
+        <Grid Width="720" Height="480">
+            <TabControl>
+                <TabControl.Resources>
+                    <Style TargetType="{x:Type TabItem}">
+                        <Setter Property="FontFamily" Value="Trebuchet MS" />
+                        <Setter Property="FontSize" Value="14" />
+                    </Style>
+                </TabControl.Resources>
+                <TabItem Header="Vendas">
+                    <Grid Background="#E8E8E8" Height="498">
+                        <DockPanel VerticalAlignment="Top" HorizontalAlignment="Left" Height="30">
+                            <Button Content="Nova Venda [F1]" Width="150"/>
+                            <Button Name="SearchSalesButton" Click="SearchSalesButtonAction" Content="Pesquisar Venda [F2]" Width="150"/>
+                        </DockPanel>
+                        <DataGrid IsReadOnly="True" AutoGenerateColumns="False" Name="salesGrid" Margin="0,31,0,0">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Binding="{Binding Id}" Header="Id da venda"/>
+                                <DataGridTextColumn Binding="{Binding IdCliente}" Header="Id do cliente"/>
+                                <DataGridTextColumn Binding="{Binding NomeCliente}" Header="Nome do cliente"/>
+                                <DataGridTextColumn Binding="{Binding PreçoTotal}" Header="Preço Total"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
+                </TabItem>
+                <TabItem Header="Produtos">
+                    <Grid Background="#E8E8E8"/>
+                </TabItem>
+                <TabItem Header="Clientes">
+                    <Grid Background="#E8E8E8"/>
+                </TabItem>
+                <TabItem Header="Relatórios">
+                    <Grid Background="#E8E8E8"/>
+                </TabItem>
+            </TabControl>
         </Grid>
     </Viewbox>
 </mah:MetroWindow>
