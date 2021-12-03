@@ -13,6 +13,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using MahApps.Metro.Controls;
+using SalesApplication.View.Services;
+using SalesApplication.View.ViewModels;
 
 namespace SalesApplication.View
 {
@@ -24,6 +26,8 @@ namespace SalesApplication.View
         public MainWindow()
         {
             InitializeComponent();
+            ControlInversion.RegisterDependencies();
+            salesGrid.ItemsSource = new SalesViewModel(ControlInversion.SaleService()).Sales;
         }
     }
 }

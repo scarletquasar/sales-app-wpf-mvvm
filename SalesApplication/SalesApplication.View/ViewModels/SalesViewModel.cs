@@ -14,14 +14,14 @@ namespace SalesApplication.View.ViewModels
 {
     public class SalesViewModel : INotifyPropertyChanged
     {
-        public SalesViewModel()
+        public SalesViewModel(IRepository<Sale> saleRepository)
         {
-            _saleRepository = ControlInversion.SaleService();
+            _saleRepository = saleRepository;
         }
-        private IRepository<Sale> _saleRepository;
-        private List<Sale> sales;
+        private readonly IRepository<Sale> _saleRepository;
+        private List<ObservableSale> sales;
         public event PropertyChangedEventHandler PropertyChanged;
-        public List<Sale> Sales
+        public List<ObservableSale> Sales
         {
             get => sales;
             set
@@ -31,14 +31,26 @@ namespace SalesApplication.View.ViewModels
             }
         }
 
-        public async void GetSales()
+        public async Task GetSales()
         {
-            Sales = (await _saleRepository.Search()).ToList();
+            List<Sale> rawSales = (await _saleRepository.Search()).ToList();
+            foreach(Sale item in rawSales)
+            {
+                ObservableSale result = new();
+                await result.Populate(item.Id, _saleRepository);
+                Sales.Add(result);
+            }
         }
 
-        public async void GetSales(int id)
+        public async Task GetSales(int id)
         {
-            Sales = (await _saleRepository.Search(x => x.Id == id)).ToList();
+            List<Sale> rawSales = (await _saleRepository.Search(x => x.Id == id)).ToList();
+            foreach (Sale item in rawSales)
+            {
+                ObservableSale result = new();
+                await result.Populate(item.Id, _saleRepository);
+                Sales.Add(result);
+            }
         }
 
         protected void OnPropertyChanged([CallerMemberName] string name = null)

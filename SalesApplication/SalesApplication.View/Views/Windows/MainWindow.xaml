@@ -19,7 +19,16 @@
                     </Style>
                 </TabControl.Resources>
                 <TabItem Header="Vendas">
-                    <Grid Background="#E8E8E8"/>
+                    <Grid Background="#E8E8E8">
+                        <DataGrid Name="salesGrid">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Binding="{Binding Id}" Header="Id da venda"/>
+                                <DataGridTextColumn Binding="{Binding IdCliente}" Header="Id do cliente"/>
+                                <DataGridTextColumn Binding="{Binding Nome}" Header="Nome do cliente"/>
+                                <DataGridTextColumn Binding="{Binding PreçoTotal}" Header="Preço Total"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
                 </TabItem>
                 <TabItem Header="Produtos">
                     <Grid Background="#E8E8E8"/>

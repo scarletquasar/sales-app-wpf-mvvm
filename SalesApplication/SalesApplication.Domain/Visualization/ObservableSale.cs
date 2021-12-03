@@ -10,21 +10,21 @@ using System.Threading.Tasks;
 
 namespace SalesApplication.Domain.Visualization
 {
-    public class ObservableProduct
+    public class ObservableSale
     {
         public int Id { get; set; }
-        public string Descrição { get; set; }
-        public double Preço { get; set; }
-        public int Estoque { get; set; }
-        public async Task Populate(int id, IRepository<Product> productRepository)
+        public int IdCliente { get; set; }
+        public string NomeCliente { get; set; }
+        public double PreçoTotal { get; set; }
+        public async Task Populate(int id, IRepository<Sale> saleRepository)
         {
-            Product product = (await productRepository.Search(x => x.Id == id)).FirstOrDefault();
-            if (product != null)
+            Sale sale = (await saleRepository.Search(x => x.Id == id)).FirstOrDefault();
+            if (sale != null)
             {
-                Id = product.Id;
-                Descrição = product.Description;
-                Preço = product.Price;
-                Estoque = product.Stock;
+                Id = sale.Id;
+                IdCliente = sale.CustomerId;
+                NomeCliente = sale.CustomerEntity.Name;
+                PreçoTotal = sale.TotalPrice;
             }
             else
             {

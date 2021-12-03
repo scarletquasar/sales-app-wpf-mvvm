@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Autofac;
+﻿using Autofac;
 using Microsoft.EntityFrameworkCore;
 using SalesApplication.Abstractions;
 using SalesApplication.Data.Repositories;
@@ -20,7 +15,11 @@ namespace SalesApplication.View.Services
         {
             _builder ??= new ContainerBuilder();
         }
-        public static ILifetimeScope GetChildContainer() => _scope.BeginLifetimeScope();
+        public static ILifetimeScope GetChildContainer()
+        {
+            return _scope.BeginLifetimeScope();
+        }
+
         public static void RegisterDependencies()
         {
             _builder.RegisterType<GeneralContext>().WithParameter(new TypedParameter(typeof(DbContextOptions<GeneralContext>), ContextOptions.Postgres())).InstancePerDependency();

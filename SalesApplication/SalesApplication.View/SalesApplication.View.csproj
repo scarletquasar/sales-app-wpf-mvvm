@@ -7,7 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Autofac" Version="6.3.0" />
     <PackageReference Include="MahApps.Metro" Version="2.4.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.12" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SalesApplication.Database\SalesApplication.Database.csproj" />
+    <ProjectReference Include="..\SalesApplication.Data\SalesApplication.Data.csproj" />
+    <ProjectReference Include="..\SalesApplication.Domain\SalesApplication.Domain.csproj" />
   </ItemGroup>
 
 </Project>
