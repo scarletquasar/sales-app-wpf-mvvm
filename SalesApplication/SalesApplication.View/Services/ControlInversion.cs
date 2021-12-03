@@ -28,6 +28,30 @@ namespace SalesApplication.View.Services
             _builder.RegisterType<Repository<Product>>().As<IRepository<Product>>().WithParameter("context", new GeneralContext(ContextOptions.Postgres())).InstancePerDependency();
             _builder.RegisterType<Repository<Sale>>().As<IRepository<Sale>>().WithParameter("context", new GeneralContext(ContextOptions.Postgres())).InstancePerDependency();
             _builder.RegisterType<Repository<SoldProduct>>().As<IRepository<SoldProduct>>().WithParameter("context", new GeneralContext(ContextOptions.Postgres())).InstancePerDependency();
+
+            _builder.RegisterType<AppBase>().AsSelf().InstancePerDependency();
+
+            _scope = _builder.Build();
+        }
+
+        public static IRepository<Product> ProductService()
+        {
+            return _scope.Resolve<IRepository<Product>>();
+        }
+
+        public static IRepository<Customer> CustomerService()
+        {
+            return _scope.Resolve<IRepository<Customer>>();
+        }
+
+        public static IRepository<Sale> SaleService()
+        {
+            return _scope.Resolve<IRepository<Sale>>();
+        }
+
+        public static IRepository<SoldProduct> SoldProductService()
+        {
+            return _scope.Resolve<IRepository<SoldProduct>>();
         }
     }
 }

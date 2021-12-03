@@ -1,6 +1,7 @@
 ﻿using SalesApplication.Abstractions;
 using SalesApplication.Domain.Business;
 using SalesApplication.Domain.Visualization;
+using SalesApplication.View.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -13,8 +14,13 @@ namespace SalesApplication.View.ViewModels
 {
     public class SalesViewModel : INotifyPropertyChanged
     {
-        public event PropertyChangedEventHandler PropertyChanged;
+        public SalesViewModel()
+        {
+            _saleRepository = ControlInversion.SaleService();
+        }
+        private IRepository<Sale> _saleRepository;
         private List<Sale> sales;
+        public event PropertyChangedEventHandler PropertyChanged;
         public List<Sale> Sales
         {
             get => sales;
@@ -25,14 +31,14 @@ namespace SalesApplication.View.ViewModels
             }
         }
 
-        public async void GetSales(IRepository<Sale> saleRepository)
+        public async void GetSales()
         {
-            Sales = (await saleRepository.Search()).ToList();
+            Sales = (await _saleRepository.Search()).ToList();
         }
 
-        public async void GetSales(int id, IRepository<Sale> saleRepository)
+        public async void GetSales(int id)
         {
-            Sales = (await saleRepository.Search(x => x.Id == id)).ToList();
+            Sales = (await _saleRepository.Search(x => x.Id == id)).ToList();
         }
 
         protected void OnPropertyChanged([CallerMemberName] string name = null)
