@@ -5,7 +5,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:SalesApplication.View" xmlns:viewmodels="clr-namespace:SalesApplication.View.ViewModels" 
+        xmlns:local="clr-namespace:SalesApplication.View" 
+        xmlns:viewmodels="clr-namespace:SalesApplication.View.ViewModels" 
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
         Title="Sistema de gerenciamento de vendas" Height="480" Width="640">
@@ -19,9 +20,11 @@
                     </Style>
                 </TabControl.Resources>
                 <TabItem Header="Vendas">
+                    <!-- Implementação do gerenciamento de vendas -->
                     <Grid Background="#E8E8E8" Height="498">
                         <DockPanel VerticalAlignment="Top" HorizontalAlignment="Left" Height="30">
                             <Button Content="Nova Venda [F1]" Width="150"/>
+                            <TextBox Name="SearchSalesTextField" Width="225"></TextBox>
                             <Button Name="SearchSalesButton" Click="SearchSalesButtonAction" Content="Pesquisar Venda [F2]" Width="150"/>
                         </DockPanel>
                         <DataGrid IsReadOnly="True" AutoGenerateColumns="False" Name="salesGrid" Margin="0,31,0,0">

@@ -34,7 +34,7 @@ namespace SalesApplication.View
 
         public async void SearchSalesButtonAction(object sender, RoutedEventArgs e)
         {
-            await salesViewModel.GetSales();
+            await salesViewModel.GetSales(SearchSalesTextField.Text);
             salesGrid.ItemsSource = salesViewModel.Sales;
         }
     }

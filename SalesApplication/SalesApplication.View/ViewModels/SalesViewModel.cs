@@ -35,25 +35,20 @@ namespace SalesApplication.View.ViewModels
             }
         }
 
-        public async Task GetSales()
+        public async Task GetSales(string search)
         {
             List<ObservableSale> _obsSales = new();
+            List<Sale> rawSales;
 
-            List<Sale> rawSales = (await _saleRepository.Search()).ToList();
-            foreach (Sale item in rawSales)
+            if (uint.TryParse(search, out uint id))
             {
-                ObservableSale result = new();
-                await result.Populate(item.Id, _saleRepository, _customerRepository);
-                _obsSales.Add(result);
+                rawSales = (await _saleRepository.Search(x => x.Id == id)).ToList();
             }
-            Sales = _obsSales;
-        }
-
-        public async Task GetSales(int id)
-        {
-            List<ObservableSale> _obsSales = new();
-
-            List<Sale> rawSales = (await _saleRepository.Search(x => x.Id == id)).ToList();
+            else
+            {
+                rawSales = (await _saleRepository.Search()).ToList();
+            }
+                
             foreach (Sale item in rawSales)
             {
                 ObservableSale result = new();
