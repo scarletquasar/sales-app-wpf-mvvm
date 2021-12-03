@@ -13,7 +13,6 @@ namespace SalesApplication.Domain.Business
     {
         private readonly IRepository<Sale> _saleRepository;
         private readonly IRepository<Product> _productRepository;
-        private readonly IRepository<Customer> _customerRepository;
         private readonly IRepository<SoldProduct> _soldProductRepository;
         public int Id { get; set; }
         public List<SoldProduct> Products { get; set; }
@@ -26,15 +25,13 @@ namespace SalesApplication.Domain.Business
             int customerId,
             IRepository<Sale> saleRepository,
             IRepository<Product> productRepository,
-            IRepository<SoldProduct> soldProductRepository,
-            IRepository<Customer> customerRepository
+            IRepository<SoldProduct> soldProductRepository
         )
         {
             this.CustomerId = customerId;
             this._saleRepository = saleRepository;
             this._productRepository = productRepository;
             this._soldProductRepository = soldProductRepository;
-            this._customerRepository = customerRepository;
             Products = new();
         }
         public async Task<SoldProduct> TryAddProduct(int productId, int quantity)

@@ -18,7 +18,13 @@
                         <Setter Property="FontSize" Value="14" />
                     </Style>
                 </TabControl.Resources>
-                <TabItem Header="Dashboard">
+                <TabItem Header="Vendas">
+                    <Grid Background="#E8E8E8"/>
+                </TabItem>
+                <TabItem Header="Produtos">
+                    <Grid Background="#E8E8E8"/>
+                </TabItem>
+                <TabItem Header="Clientes">
                     <Grid Background="#E8E8E8"/>
                 </TabItem>
                 <TabItem Header="Relatórios">

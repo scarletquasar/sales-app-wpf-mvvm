@@ -33,8 +33,7 @@ namespace SalesApplication.Tests
                 recordedCustomer.Id,
                 saleRepository,
                 productRepository,
-                new Repository<SoldProduct>(new GeneralContext(ContextOptions.Postgres())),
-                customerRepository
+                new Repository<SoldProduct>(new GeneralContext(ContextOptions.Postgres()))
             );
 
             var addProductToSale = await sale.TryAddProduct(recordedProduct.Id, recordedProduct.Stock);
