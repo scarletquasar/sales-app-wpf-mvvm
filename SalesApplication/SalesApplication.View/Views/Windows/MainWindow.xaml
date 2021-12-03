@@ -25,7 +25,8 @@
                         <DockPanel VerticalAlignment="Top" HorizontalAlignment="Left" Height="30">
                             <Button Content="Nova Venda [F1]" Width="150"/>
                             <TextBox Name="SearchSalesTextField" Width="225"></TextBox>
-                            <Button Name="SearchSalesButton" Click="SearchSalesButtonAction" Content="Pesquisar Venda [F2]" Width="150"/>
+                            <Button Name="SearchSalesIdButton" Click="SearchSalesButtonAction" Content="Pesquisar Venda/Id [F2]" Width="150"/>
+                            <Button Name="SearchSalesCustomerIdButton" Click="SearchSalesButtonAction" Content="Pesquisar Venda/Cliente [F2]" Width="189"/>
                         </DockPanel>
                         <DataGrid IsReadOnly="True" AutoGenerateColumns="False" Name="salesGrid" Margin="0,31,0,0">
                             <DataGrid.Columns>

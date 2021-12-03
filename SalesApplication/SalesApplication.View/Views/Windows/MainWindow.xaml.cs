@@ -34,7 +34,16 @@ namespace SalesApplication.View
 
         public async void SearchSalesButtonAction(object sender, RoutedEventArgs e)
         {
-            await salesViewModel.GetSales(SearchSalesTextField.Text);
+            switch(((Button)sender).Name)
+            {
+                case "SearchSalesCustomerIdButton":
+                    await salesViewModel.GetSales(SearchSalesTextField.Text, true);
+                    break;
+                case "SearchSalesIdButton":
+                    await salesViewModel.GetSales(SearchSalesTextField.Text, false);
+                    break;
+            }
+            
             salesGrid.ItemsSource = salesViewModel.Sales;
         }
     }

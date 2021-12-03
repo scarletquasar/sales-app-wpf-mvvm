@@ -35,14 +35,21 @@ namespace SalesApplication.View.ViewModels
             }
         }
 
-        public async Task GetSales(string search)
+        public async Task GetSales(string search, bool getByCustomerId)
         {
             List<ObservableSale> _obsSales = new();
             List<Sale> rawSales;
 
             if (uint.TryParse(search, out uint id))
             {
-                rawSales = (await _saleRepository.Search(x => x.Id == id)).ToList();
+                if(getByCustomerId)
+                {
+                    rawSales = (await _saleRepository.Search(x => x.CustomerId == id)).ToList();
+                }
+                else
+                {
+                    rawSales = (await _saleRepository.Search(x => x.Id == id)).ToList();
+                }
             }
             else
             {
