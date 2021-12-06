@@ -25,12 +25,15 @@ namespace SalesApplication.View
     {
         private readonly SalesViewModel salesViewModel;
         private readonly ProductsViewModel productsViewModel;
+        private readonly CustomersViewModel customersViewModel;
+
         public MainWindow()
         {
             InitializeComponent();
             ControlInversion.RegisterDependencies();
             salesViewModel = new(ControlInversion.SaleService(), ControlInversion.CustomerService());
             productsViewModel = new(ControlInversion.ProductService());
+            customersViewModel = new(ControlInversion.CustomerService());
 
             productsGrid.ItemsSource = productsViewModel.Products;
             salesGrid.ItemsSource = salesViewModel.Sales;

@@ -14,6 +14,10 @@ namespace SalesApplication.View.ViewModels
 {
     public class CustomersViewModel : INotifyPropertyChanged
     {
+        public CustomersViewModel(IRepository<Customer> customerRepository)
+        {
+            _customerRepository = customerRepository;
+        }
         private readonly IRepository<Customer> _customerRepository;
         private ObservableCollection<ObservableCustomer> customers;
         public event PropertyChangedEventHandler PropertyChanged;
