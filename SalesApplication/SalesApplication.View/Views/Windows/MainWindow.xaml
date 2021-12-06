@@ -75,7 +75,7 @@
                         <DataGrid 
                             IsReadOnly="True" 
                             AutoGenerateColumns="False" 
-                            Name="productsGrid" 
+                            Name="customersGrid" 
                             Margin="0,31,0,0">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Binding="{Binding Id}" Header="Id do produto"/>
