@@ -31,9 +31,9 @@ namespace SalesApplication.View
         {
             InitializeComponent();
             ControlInversion.RegisterDependencies();
-            salesViewModel = new(ControlInversion.SaleService(), ControlInversion.CustomerService());
             productsViewModel = new(ControlInversion.ProductService());
             customersViewModel = new(ControlInversion.CustomerService());
+            salesViewModel = new(ControlInversion.SaleService(), ControlInversion.CustomerService());
 
             productsGrid.ItemsSource = productsViewModel.Products;
             salesGrid.ItemsSource = salesViewModel.Sales;
