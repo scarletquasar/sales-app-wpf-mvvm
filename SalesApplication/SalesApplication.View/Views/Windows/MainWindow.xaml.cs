@@ -24,11 +24,15 @@ namespace SalesApplication.View
     public partial class MainWindow : MetroWindow
     {
         private readonly SalesViewModel salesViewModel;
+        private readonly ProductsViewModel productsViewModel;
         public MainWindow()
         {
             InitializeComponent();
             ControlInversion.RegisterDependencies();
             salesViewModel = new(ControlInversion.SaleService(), ControlInversion.CustomerService());
+            productsViewModel = new(ControlInversion.ProductService());
+
+            productsGrid.ItemsSource = productsViewModel.Products;
             salesGrid.ItemsSource = salesViewModel.Sales;
         }
 
@@ -45,6 +49,12 @@ namespace SalesApplication.View
             }
 
             salesGrid.ItemsSource = salesViewModel.Sales;
+        }
+
+        public async void SearchProductsButtonAction(object sender, RoutedEventArgs e)
+        {
+            await productsViewModel.GetProducts(SearchProductsTextField.Text);
+            productsGrid.ItemsSource = productsViewModel.Products;
         }
     }
 }
