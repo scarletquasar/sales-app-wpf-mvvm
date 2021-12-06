@@ -6,7 +6,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SalesApplication.View" 
-        xmlns:viewmodels="clr-namespace:SalesApplication.View.ViewModels" 
+        xmlns:viewmodels="clr-namespace:SalesApplication.View.ViewModels"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
         Title="Sistema de gerenciamento de vendas" Height="480" Width="640">
@@ -28,7 +28,11 @@
                             <Button Name="SearchSalesIdButton" Click="SearchSalesButtonAction" Content="Pesquisar Venda/Id [F2]" Width="150"/>
                             <Button Name="SearchSalesCustomerIdButton" Click="SearchSalesButtonAction" Content="Pesquisar Venda/Cliente [F2]" Width="189"/>
                         </DockPanel>
-                        <DataGrid IsReadOnly="True" AutoGenerateColumns="False" Name="salesGrid" Margin="0,31,0,0">
+                        <DataGrid
+                            IsReadOnly="True" 
+                            AutoGenerateColumns="False" 
+                            Name="salesGrid" 
+                            Margin="0,31,0,0">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Binding="{Binding Id}" Header="Id da venda"/>
                                 <DataGridTextColumn Binding="{Binding IdCliente}" Header="Id do cliente"/>
@@ -41,7 +45,23 @@
                 <TabItem Header="Produtos">
                     <!-- Implementação do gerenciamento de produtos -->
                     <Grid Background="#E8E8E8" Height="498">
-                        
+                        <DockPanel VerticalAlignment="Top" HorizontalAlignment="Left" Height="30">
+                            <Button Content="Novo Produto [F1]" Width="150"/>
+                            <TextBox Name="SearchProductsTextField" Width="225"></TextBox>
+                            <Button Name="SearchProductsIdButton" Click="SearchSalesButtonAction" Content="Pesquisar Produto/Id [F2]" Width="339"/>
+                        </DockPanel>
+                        <DataGrid 
+                            IsReadOnly="True" 
+                            AutoGenerateColumns="False" 
+                            Name="productsGrid" 
+                            Margin="0,31,0,0">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Binding="{Binding Id}" Header="Id do produto"/>
+                                <DataGridTextColumn Binding="{Binding Descrição}" Header="Id do produto"/>
+                                <DataGridTextColumn Binding="{Binding Preço}" Header="Preço do produto"/>
+                                <DataGridTextColumn Binding="{Binding Estoque}" Header="Estoque disponível"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
                     </Grid>
                 </TabItem>
                 <TabItem Header="Clientes">

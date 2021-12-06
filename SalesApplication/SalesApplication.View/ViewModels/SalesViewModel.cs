@@ -5,6 +5,7 @@ using SalesApplication.Domain.Visualization;
 using SalesApplication.View.Services;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -23,9 +24,9 @@ namespace SalesApplication.View.ViewModels
 
         private readonly IRepository<Sale> _saleRepository;
         private readonly IRepository<Customer> _customerRepository;
-        private List<ObservableSale> sales;
+        private ObservableCollection<ObservableSale> sales;
         public event PropertyChangedEventHandler PropertyChanged;
-        public List<ObservableSale> Sales
+        public ObservableCollection<ObservableSale> Sales
         {
             get => sales;
             set
@@ -37,8 +38,8 @@ namespace SalesApplication.View.ViewModels
 
         public async Task GetSales(string search, bool getByCustomerId)
         {
-            List<ObservableSale> _obsSales = new();
             List<Sale> rawSales;
+            ObservableCollection<ObservableSale> _obsSales = new();
 
             if (uint.TryParse(search, out uint id))
             {
@@ -57,7 +58,9 @@ namespace SalesApplication.View.ViewModels
                 await result.Populate(item.Id, _saleRepository, _customerRepository);
                 _obsSales.Add(result);
             }
+
             Sales = _obsSales;
+            OnPropertyChanged();
         }
 
         protected void OnPropertyChanged([CallerMemberName] string name = null)

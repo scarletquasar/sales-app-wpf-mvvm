@@ -28,13 +28,13 @@ namespace SalesApplication.View
         {
             InitializeComponent();
             ControlInversion.RegisterDependencies();
-            salesViewModel = new (ControlInversion.SaleService(), ControlInversion.CustomerService());
+            salesViewModel = new(ControlInversion.SaleService(), ControlInversion.CustomerService());
             salesGrid.ItemsSource = salesViewModel.Sales;
         }
 
         public async void SearchSalesButtonAction(object sender, RoutedEventArgs e)
         {
-            switch(((Button)sender).Name)
+            switch (((Button)sender).Name)
             {
                 case "SearchSalesCustomerIdButton":
                     await salesViewModel.GetSales(SearchSalesTextField.Text, true);
@@ -43,7 +43,7 @@ namespace SalesApplication.View
                     await salesViewModel.GetSales(SearchSalesTextField.Text, false);
                     break;
             }
-            
+
             salesGrid.ItemsSource = salesViewModel.Sales;
         }
     }
