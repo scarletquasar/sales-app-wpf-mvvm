@@ -70,7 +70,7 @@
                         <DockPanel VerticalAlignment="Top" HorizontalAlignment="Left" Height="30">
                             <Button Content="Novo Cliente [F1]" Width="150"/>
                             <TextBox Name="SearchCustomersTextField" Width="225"></TextBox>
-                            <Button Name="SearchCustomersButton" Click="SearchProductsButtonAction" Content="Pesquisar Cliente [F2]" Width="339"/>
+                            <Button Name="SearchCustomersButton" Click="SearchCustomersButtonAction" Content="Pesquisar Cliente [F2]" Width="339"/>
                         </DockPanel>
                         <DataGrid 
                             IsReadOnly="True" 
@@ -79,9 +79,7 @@
                             Margin="0,31,0,0">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Binding="{Binding Id}" Header="Id do produto"/>
-                                <DataGridTextColumn Binding="{Binding Descrição}" Header="Descrição do produto"/>
-                                <DataGridTextColumn Binding="{Binding Preço}" Header="Preço do produto"/>
-                                <DataGridTextColumn Binding="{Binding Estoque}" Header="Estoque disponível"/>
+                                <DataGridTextColumn Binding="{Binding Nome}" Header="Descrição do produto"/>
                             </DataGrid.Columns>
                         </DataGrid>
                     </Grid>

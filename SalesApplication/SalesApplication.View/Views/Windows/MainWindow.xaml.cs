@@ -59,5 +59,11 @@ namespace SalesApplication.View
             await productsViewModel.GetProducts(SearchProductsTextField.Text);
             productsGrid.ItemsSource = productsViewModel.Products;
         }
+
+        public async void SearchCustomersButtonAction(object sender, RoutedEventArgs e)
+        {
+            await customersViewModel.GetCustomers(SearchCustomersTextField.Text);
+            customersGrid.ItemsSource = customersViewModel.Customers;
+        }
     }
 }
