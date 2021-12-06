@@ -20,7 +20,7 @@ namespace SalesApplication.View.ViewModels
             _saleRepository = saleRepository;
             _customerRepository = customerRepository;
         }
-        private readonly MainWindow _window;
+
         private readonly IRepository<Sale> _saleRepository;
         private readonly IRepository<Customer> _customerRepository;
         private List<ObservableSale> sales;
@@ -42,14 +42,9 @@ namespace SalesApplication.View.ViewModels
 
             if (uint.TryParse(search, out uint id))
             {
-                if(getByCustomerId)
-                {
-                    rawSales = (await _saleRepository.Search(x => x.CustomerId == id)).ToList();
-                }
-                else
-                {
-                    rawSales = (await _saleRepository.Search(x => x.Id == id)).ToList();
-                }
+                rawSales = getByCustomerId
+                    ? (await _saleRepository.Search(x => x.CustomerId == id)).ToList()
+                    : (await _saleRepository.Search(x => x.Id == id)).ToList();
             }
             else
             {

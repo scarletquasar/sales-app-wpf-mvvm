@@ -39,7 +39,10 @@
                     </Grid>
                 </TabItem>
                 <TabItem Header="Produtos">
-                    <Grid Background="#E8E8E8"/>
+                    <!-- Implementação do gerenciamento de produtos -->
+                    <Grid Background="#E8E8E8" Height="498">
+                        
+                    </Grid>
                 </TabItem>
                 <TabItem Header="Clientes">
                     <Grid Background="#E8E8E8"/>
