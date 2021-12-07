@@ -6,7 +6,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SalesApplication.View" 
-        xmlns:viewmodels="clr-namespace:SalesApplication.View.ViewModels"
+        xmlns:viewmodels="clr-namespace:SalesApplication.View.ViewModels" 
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
         Title="Sistema de gerenciamento de vendas" Height="480" Width="640">
@@ -40,6 +40,15 @@
                                 <DataGridTextColumn Binding="{Binding PreçoTotal}" Header="Preço Total"/>
                             </DataGrid.Columns>
                         </DataGrid>
+                        <mah:FlyoutsControl Name="SalesFlyouts" d:DataContext="{d:DesignInstance Type=viewmodels:SalesViewModel}">
+                            <mah:Flyout Header="Settings" Position="Right" Width="250">
+                                <!-- The content goes here -->
+                            </mah:Flyout>
+
+                            <mah:Flyout Header="Nova Venda" IsOpen="{Binding NewSaleFlyoutOpen}" Position="Right" Width="300">
+                                <!-- The content goes here -->
+                            </mah:Flyout>
+                        </mah:FlyoutsControl>
                     </Grid>
                 </TabItem>
                 <TabItem Header="Produtos">
@@ -62,6 +71,15 @@
                                 <DataGridTextColumn Binding="{Binding Estoque}" Header="Estoque disponível"/>
                             </DataGrid.Columns>
                         </DataGrid>
+                        <mah:FlyoutsControl Name="ProductsFlyouts" d:DataContext="{d:DesignInstance Type=viewmodels:ProductsViewModel}">
+                            <mah:Flyout Header="Settings" Position="Right" Width="250">
+                                <!-- The content goes here -->
+                            </mah:Flyout>
+
+                            <mah:Flyout Header="Novo Produto" IsOpen="{Binding NewProductFlyoutOpen}" Position="Right" Width="300">
+                                <!-- The content goes here -->
+                            </mah:Flyout>
+                        </mah:FlyoutsControl>
                     </Grid>
                 </TabItem>
                 <TabItem Header="Clientes">
@@ -82,6 +100,15 @@
                                 <DataGridTextColumn Binding="{Binding Nome}" Header="Descrição do produto"/>
                             </DataGrid.Columns>
                         </DataGrid>
+                        <mah:FlyoutsControl Name="CustomersFlyouts" d:DataContext="{d:DesignInstance Type=viewmodels:CustomersViewModel}">
+                            <mah:Flyout Header="Settings" Position="Right" Width="250">
+                                <!-- The content goes here -->
+                            </mah:Flyout>
+
+                            <mah:Flyout Header="Novo Cliente" IsOpen="{Binding NewCustomerFlyoutOpen}" Position="Right" Width="300">
+                                <!-- The content goes here -->
+                            </mah:Flyout>
+                        </mah:FlyoutsControl>
                     </Grid>
                 </TabItem>
                 <TabItem Header="Relatórios">

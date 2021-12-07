@@ -37,6 +37,10 @@ namespace SalesApplication.View
 
             productsGrid.ItemsSource = productsViewModel.Products;
             salesGrid.ItemsSource = salesViewModel.Sales;
+
+            SalesFlyouts.DataContext = salesViewModel;
+            ProductsFlyouts.DataContext = productsViewModel;
+            CustomersFlyouts.DataContext = customersViewModel;
         }
 
         public async void SearchSalesButtonAction(object sender, RoutedEventArgs e)

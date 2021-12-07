@@ -25,6 +25,17 @@ namespace SalesApplication.View.ViewModels
         private readonly IRepository<Sale> _saleRepository;
         private readonly IRepository<Customer> _customerRepository;
         private ObservableCollection<ObservableSale> sales;
+        private bool newSaleFlyoutOpen = true;
+        public bool NewSaleFlyoutOpen
+        {
+            get => newSaleFlyoutOpen;
+            set
+            {
+                newSaleFlyoutOpen = value;
+                OnPropertyChanged();
+            }
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
         public ObservableCollection<ObservableSale> Sales
         {
