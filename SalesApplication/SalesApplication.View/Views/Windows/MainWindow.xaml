@@ -42,11 +42,11 @@
                         </DataGrid>
                         <mah:FlyoutsControl Name="SalesFlyouts" d:DataContext="{d:DesignInstance Type=viewmodels:SalesViewModel}">
                             <mah:Flyout Header="Settings" Position="Right" Width="250">
-                                <!-- The content goes here -->
+
                             </mah:Flyout>
 
                             <mah:Flyout Header="Nova Venda" IsOpen="{Binding NewSaleFlyoutOpen}" Position="Right" Width="300">
-                                <!-- The content goes here -->
+
                             </mah:Flyout>
                         </mah:FlyoutsControl>
                     </Grid>
@@ -73,11 +73,11 @@
                         </DataGrid>
                         <mah:FlyoutsControl Name="ProductsFlyouts" d:DataContext="{d:DesignInstance Type=viewmodels:ProductsViewModel}">
                             <mah:Flyout Header="Settings" Position="Right" Width="250">
-                                <!-- The content goes here -->
+
                             </mah:Flyout>
 
                             <mah:Flyout Header="Novo Produto" IsOpen="{Binding NewProductFlyoutOpen}" Position="Right" Width="300">
-                                <!-- The content goes here -->
+
                             </mah:Flyout>
                         </mah:FlyoutsControl>
                     </Grid>
@@ -102,11 +102,11 @@
                         </DataGrid>
                         <mah:FlyoutsControl Name="CustomersFlyouts" d:DataContext="{d:DesignInstance Type=viewmodels:CustomersViewModel}">
                             <mah:Flyout Header="Settings" Position="Right" Width="250">
-                                <!-- The content goes here -->
+
                             </mah:Flyout>
 
                             <mah:Flyout Header="Novo Cliente" IsOpen="{Binding NewCustomerFlyoutOpen}" Position="Right" Width="300">
-                                <!-- The content goes here -->
+
                             </mah:Flyout>
                         </mah:FlyoutsControl>
                     </Grid>
