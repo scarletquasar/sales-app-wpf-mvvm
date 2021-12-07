@@ -44,10 +44,6 @@
                             </DataGrid.Columns>
                         </DataGrid>
                         <mah:FlyoutsControl Name="SalesFlyouts">
-                            <mah:Flyout Header="Settings" Position="Right" Width="250">
-
-                            </mah:Flyout>
-
                             <mah:Flyout Header="Nova Venda" IsOpen="{Binding NewSaleFlyoutOpen}" Position="Right" Width="300">
 
                             </mah:Flyout>
@@ -78,10 +74,6 @@
                             </DataGrid.Columns>
                         </DataGrid>
                         <mah:FlyoutsControl Name="ProductsFlyouts">
-                            <mah:Flyout Header="Settings" Position="Right" Width="250">
-
-                            </mah:Flyout>
-
                             <mah:Flyout Header="Novo Produto" IsOpen="{Binding NewProductFlyoutOpen}" Position="Right" Width="300">
 
                             </mah:Flyout>
@@ -110,10 +102,6 @@
                             </DataGrid.Columns>
                         </DataGrid>
                         <mah:FlyoutsControl Name="CustomersFlyouts">
-                            <mah:Flyout Header="Settings" Position="Right" Width="250">
-
-                            </mah:Flyout>
-
                             <mah:Flyout Header="Novo Cliente" IsOpen="{Binding NewCustomerFlyoutOpen}" Position="Right" Width="300">
 
                             </mah:Flyout>
