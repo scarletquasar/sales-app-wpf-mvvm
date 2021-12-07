@@ -20,7 +20,7 @@ namespace SalesApplication.View.ViewModels
         }
         private readonly IRepository<Product> _productRepository;
         private ObservableCollection<ObservableProduct> products;
-        private bool newProductFlyoutOpen = true;
+        private bool newProductFlyoutOpen;
         public bool NewProductFlyoutOpen
         {
             get => newProductFlyoutOpen;

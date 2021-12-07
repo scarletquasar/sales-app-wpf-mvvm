@@ -25,7 +25,7 @@ namespace SalesApplication.View.ViewModels
         private readonly IRepository<Sale> _saleRepository;
         private readonly IRepository<Customer> _customerRepository;
         private ObservableCollection<ObservableSale> sales;
-        private bool newSaleFlyoutOpen = true;
+        private bool newSaleFlyoutOpen;
         public bool NewSaleFlyoutOpen
         {
             get => newSaleFlyoutOpen;
