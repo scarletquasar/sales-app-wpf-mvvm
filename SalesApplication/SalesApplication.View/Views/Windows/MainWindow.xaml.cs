@@ -55,7 +55,7 @@ namespace SalesApplication.View
                     break;
             }
 
-            salesGrid.ItemsSource = salesViewModel.Sales;
+           salesGrid.ItemsSource = salesViewModel.Sales;
         }
 
         public async void SearchProductsButtonAction(object sender, RoutedEventArgs e)
