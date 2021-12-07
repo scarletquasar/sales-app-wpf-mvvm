@@ -61,7 +61,8 @@
                                             </DataGrid.Columns>
                                         </DataGrid>
                                     </Viewbox>
-
+                                    <TextBlock Margin="8, 8, 8, 8">Id do Cliente:</TextBlock>
+                                    <Button Margin="8, 8, 8, 8" Width="125">Finalizar Venda</Button>
                                 </StackPanel>
                             </mah:Flyout>
                         </mah:FlyoutsControl>
