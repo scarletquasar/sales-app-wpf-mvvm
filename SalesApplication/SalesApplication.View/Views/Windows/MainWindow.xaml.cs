@@ -35,9 +35,6 @@ namespace SalesApplication.View
             customersViewModel = new(ControlInversion.CustomerService());
             salesViewModel = new(ControlInversion.SaleService(), ControlInversion.CustomerService());
 
-            productsGrid.ItemsSource = productsViewModel.Products;
-            salesGrid.ItemsSource = salesViewModel.Sales;
-
             SalesManager.DataContext = salesViewModel;
             ProductsManager.DataContext = productsViewModel;
             CustomersManager.DataContext = customersViewModel;
@@ -54,20 +51,16 @@ namespace SalesApplication.View
                     await salesViewModel.GetSales(SearchSalesTextField.Text, false);
                     break;
             }
-
-           salesGrid.ItemsSource = salesViewModel.Sales;
         }
 
         public async void SearchProductsButtonAction(object sender, RoutedEventArgs e)
         {
             await productsViewModel.GetProducts(SearchProductsTextField.Text);
-            productsGrid.ItemsSource = productsViewModel.Products;
         }
 
         public async void SearchCustomersButtonAction(object sender, RoutedEventArgs e)
         {
             await customersViewModel.GetCustomers(SearchCustomersTextField.Text);
-            customersGrid.ItemsSource = customersViewModel.Customers;
         }
 
         private void OpenSaleCreationFlyout(object sender, RoutedEventArgs e)
