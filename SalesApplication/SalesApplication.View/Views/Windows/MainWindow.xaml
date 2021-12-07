@@ -51,6 +51,17 @@
                                         <TextBox Width="325"></TextBox>
                                         <Button Width="55">+</Button>
                                     </DockPanel>
+                                    <Viewbox Width="380">
+                                        <DataGrid Margin="8, 8, 8, 8">
+                                            <DataGrid.Columns>
+                                                <DataGridTextColumn Binding="{Binding Id}" Header="Id do produto"/>
+                                                <DataGridTextColumn Binding="{Binding Descrição}" Header="Descrição do produto"/>
+                                                <DataGridTextColumn Binding="{Binding Preço}" Header="Preço do produto"/>
+                                                <DataGridTextColumn Binding="{Binding Estoque}" Header="Estoque disponível"/>
+                                            </DataGrid.Columns>
+                                        </DataGrid>
+                                    </Viewbox>
+
                                 </StackPanel>
                             </mah:Flyout>
                         </mah:FlyoutsControl>
