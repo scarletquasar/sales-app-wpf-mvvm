@@ -21,7 +21,10 @@
                 </TabControl.Resources>
                 <TabItem Header="Vendas">
                     <!-- Implementação do gerenciamento de vendas -->
-                    <Grid Background="#E8E8E8" Height="498">
+                    <Grid Name="SalesManager"
+                          d:DataContext="{d:DesignInstance Type=viewmodels:SalesViewModel}"
+                          Background="#E8E8E8" 
+                          Height="498">
                         <DockPanel VerticalAlignment="Top" HorizontalAlignment="Left" Height="30">
                             <Button Content="Nova Venda [F1]" Width="150"/>
                             <TextBox Name="SearchSalesTextField" Width="225"></TextBox>
@@ -40,7 +43,7 @@
                                 <DataGridTextColumn Binding="{Binding PreçoTotal}" Header="Preço Total"/>
                             </DataGrid.Columns>
                         </DataGrid>
-                        <mah:FlyoutsControl Name="SalesFlyouts" d:DataContext="{d:DesignInstance Type=viewmodels:SalesViewModel}">
+                        <mah:FlyoutsControl Name="SalesFlyouts">
                             <mah:Flyout Header="Settings" Position="Right" Width="250">
 
                             </mah:Flyout>
@@ -53,7 +56,10 @@
                 </TabItem>
                 <TabItem Header="Produtos">
                     <!-- Implementação do gerenciamento de produtos -->
-                    <Grid Background="#E8E8E8" Height="498">
+                    <Grid Name="ProductsManager" 
+                          d:DataContext="{d:DesignInstance Type=viewmodels:ProductsViewModel}" 
+                          Background="#E8E8E8" 
+                          Height="498">
                         <DockPanel VerticalAlignment="Top" HorizontalAlignment="Left" Height="30">
                             <Button Content="Novo Produto [F1]" Width="150"/>
                             <TextBox Name="SearchProductsTextField" Width="225"></TextBox>
@@ -71,7 +77,7 @@
                                 <DataGridTextColumn Binding="{Binding Estoque}" Header="Estoque disponível"/>
                             </DataGrid.Columns>
                         </DataGrid>
-                        <mah:FlyoutsControl Name="ProductsFlyouts" d:DataContext="{d:DesignInstance Type=viewmodels:ProductsViewModel}">
+                        <mah:FlyoutsControl Name="ProductsFlyouts">
                             <mah:Flyout Header="Settings" Position="Right" Width="250">
 
                             </mah:Flyout>
@@ -84,7 +90,10 @@
                 </TabItem>
                 <TabItem Header="Clientes">
                     <!-- Implementação do gerenciamento de clientes -->
-                    <Grid Background="#E8E8E8" Height="498">
+                    <Grid Name="CustomersManager"
+                          d:DataContext="{d:DesignInstance Type=viewmodels:CustomersViewModel}"
+                          Background="#E8E8E8" 
+                          Height="498">
                         <DockPanel VerticalAlignment="Top" HorizontalAlignment="Left" Height="30">
                             <Button Content="Novo Cliente [F1]" Width="150"/>
                             <TextBox Name="SearchCustomersTextField" Width="225"></TextBox>
@@ -100,7 +109,7 @@
                                 <DataGridTextColumn Binding="{Binding Nome}" Header="Descrição do produto"/>
                             </DataGrid.Columns>
                         </DataGrid>
-                        <mah:FlyoutsControl Name="CustomersFlyouts" d:DataContext="{d:DesignInstance Type=viewmodels:CustomersViewModel}">
+                        <mah:FlyoutsControl Name="CustomersFlyouts">
                             <mah:Flyout Header="Settings" Position="Right" Width="250">
 
                             </mah:Flyout>
