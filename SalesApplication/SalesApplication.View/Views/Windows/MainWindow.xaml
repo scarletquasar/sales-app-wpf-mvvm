@@ -26,7 +26,7 @@
                           Background="#E8E8E8" 
                           Height="498">
                         <DockPanel VerticalAlignment="Top" HorizontalAlignment="Left" Height="30">
-                            <Button Content="Nova Venda [F1]" Width="150"/>
+                            <Button Content="Nova Venda [F1]" Click="OpenSaleCreationFlyout" Width="150"/>
                             <TextBox Name="SearchSalesTextField" Width="225"></TextBox>
                             <Button Name="SearchSalesIdButton" Click="SearchSalesButtonAction" Content="Pesquisar Venda/Id [F2]" Width="150"/>
                             <Button Name="SearchSalesCustomerIdButton" Click="SearchSalesButtonAction" Content="Pesquisar Venda/Cliente [F2]" Width="189"/>
@@ -44,8 +44,14 @@
                             </DataGrid.Columns>
                         </DataGrid>
                         <mah:FlyoutsControl Name="SalesFlyouts">
-                            <mah:Flyout Header="Nova Venda" IsOpen="{Binding NewSaleFlyoutOpen}" Position="Right" Width="300">
-
+                            <mah:Flyout Header="Nova Venda" IsOpen="{Binding NewSaleFlyoutOpen}" Position="Right" Width="400">
+                                <StackPanel>
+                                    <TextBlock Margin="8, 8, 8, 8">Adicionar Produto:</TextBlock>
+                                    <DockPanel Margin="8, 8, 8, 8" VerticalAlignment="Center">
+                                        <TextBox Width="325"></TextBox>
+                                        <Button Width="55">+</Button>
+                                    </DockPanel>
+                                </StackPanel>
                             </mah:Flyout>
                         </mah:FlyoutsControl>
                     </Grid>

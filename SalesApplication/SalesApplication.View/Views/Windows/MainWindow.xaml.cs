@@ -69,5 +69,10 @@ namespace SalesApplication.View
             await customersViewModel.GetCustomers(SearchCustomersTextField.Text);
             customersGrid.ItemsSource = customersViewModel.Customers;
         }
+
+        private void OpenSaleCreationFlyout(object sender, RoutedEventArgs e)
+        {
+            salesViewModel.NewSaleFlyoutOpen = true;
+        }
     }
 }
