@@ -16,6 +16,7 @@ namespace SalesApplication.Domain.Visualization
         public int IdCliente { get; set; }
         public string NomeCliente { get; set; }
         public double PreçoTotal { get; set; }
+        public DateTime FeitaEm { get; set; }
         public async Task Populate(int id, IRepository<Sale> saleRepository, IRepository<Customer> customerRepository)
         {
             Sale sale = (await saleRepository.Search(x => x.Id == id)).FirstOrDefault();
@@ -25,6 +26,7 @@ namespace SalesApplication.Domain.Visualization
                 IdCliente = sale.CustomerId;
                 NomeCliente = (await customerRepository.Search(x => x.Id == sale.CustomerId)).FirstOrDefault().Name;
                 PreçoTotal = sale.TotalPrice;
+                FeitaEm = sale.CreatedAt;
             }
             else
             {

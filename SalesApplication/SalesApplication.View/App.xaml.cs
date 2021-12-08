@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SalesApplication.View.Services;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -13,5 +14,10 @@ namespace SalesApplication.View
     /// </summary>
     public partial class App : Application
     {
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            ControlInversion.RegisterDependencies();
+            base.OnStartup(e);
+        }
     }
 }

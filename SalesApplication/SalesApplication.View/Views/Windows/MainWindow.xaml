@@ -5,7 +5,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:SalesApplication.View" 
         xmlns:viewmodels="clr-namespace:SalesApplication.View.ViewModels" 
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
@@ -31,39 +30,55 @@
                             <Button Name="SearchSalesCustomerIdButton" Click="SearchSalesButtonAction" Content="Pesquisar Venda/Cliente [F2]" Width="189"/>
                         </DockPanel>
                         <DataGrid
-                            IsReadOnly="True" 
-                            AutoGenerateColumns="False" 
-                            Name="salesGrid"
-                            Margin="0,31,0,0"
-                            ItemsSource="{Binding Sales}"
-                            d:DataContext="{d:DesignInstance Type=viewmodels:SalesViewModel}">
+                        IsReadOnly="True" 
+                        AutoGenerateColumns="False" 
+                        Name="salesGrid"
+                        Margin="0,31,0,0"
+                        ItemsSource="{Binding Sales}"
+                        d:DataContext="{d:DesignInstance Type=viewmodels:SalesViewModel}">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Binding="{Binding Id}" Header="Id da venda"/>
                                 <DataGridTextColumn Binding="{Binding IdCliente}" Header="Id do cliente"/>
                                 <DataGridTextColumn Binding="{Binding NomeCliente}" Header="Nome do cliente"/>
                                 <DataGridTextColumn Binding="{Binding PreçoTotal}" Header="Preço Total"/>
+                                <DataGridTextColumn Binding="{Binding FeitaEm}" Header="Feita Em"/>
                             </DataGrid.Columns>
                         </DataGrid>
                         <mah:FlyoutsControl Name="SalesFlyouts">
-                            <mah:Flyout Header="Nova Venda" IsOpen="{Binding NewSaleFlyoutOpen}" Position="Right" Width="400">
-                                <StackPanel>
-                                    <TextBlock Margin="8, 8, 8, 8">Adicionar Produto:</TextBlock>
+                            <mah:Flyout 
+                                Name="CreateSale" 
+                                Header="Nova Venda"
+                                d:DataContext="{d:DesignInstance Type=viewmodels:SalesViewModel}"
+                                IsOpen="{Binding NewSaleFlyoutOpen}" 
+                                Position="Right" 
+                                Width="400">
+                                <StackPanel Name="CreateSaleContainer">
+                                    <TextBlock Margin="8, 8, 8, 8">Adicionar Produto [Id/Quantidade]:</TextBlock>
                                     <DockPanel Margin="8, 8, 8, 8" VerticalAlignment="Center">
-                                        <TextBox Width="325"></TextBox>
-                                        <Button Width="55">+</Button>
+                                        <TextBox Name="SaleProductId" Width="100"></TextBox>
+                                        <TextBox Name="SaleProductQuantity" Width="100"></TextBox>
+                                        <Button Click="TryRegisterProductInSale" Width="55">+</Button>
                                     </DockPanel>
                                     <Viewbox Width="380">
-                                        <DataGrid Margin="8, 8, 8, 8">
+                                        <DataGrid
+                                            Name="ProductRegisterDataGrid"
+                                            ItemsSource="{Binding RegisterSaleProducts}"
+                                            d:DataContext="{d:DesignInstance Type=viewmodels:SalesRegisterViewModel}"
+                                            AutoGenerateColumns="False"
+                                            Margin="8, 8, 8, 8"
+                                            >
                                             <DataGrid.Columns>
                                                 <DataGridTextColumn Binding="{Binding Id}" Header="Id do produto"/>
                                                 <DataGridTextColumn Binding="{Binding Descrição}" Header="Descrição do produto"/>
                                                 <DataGridTextColumn Binding="{Binding Preço}" Header="Preço do produto"/>
                                                 <DataGridTextColumn Binding="{Binding Estoque}" Header="Estoque disponível"/>
+                                                <DataGridTextColumn Binding="{Binding QuantidadeUsada}" Header="Qtd/Venda"/>
                                             </DataGrid.Columns>
                                         </DataGrid>
                                     </Viewbox>
                                     <TextBlock Margin="8, 8, 8, 8">Id do Cliente:</TextBlock>
-                                    <Button Margin="8, 8, 8, 8" Width="125">Finalizar Venda</Button>
+                                    <TextBox Margin="8, 8, 8, 8" HorizontalAlignment="Left" Name="SaleCustomerId" Width="200"></TextBox>
+                                    <Button Margin="8, 8, 8, 8" Width="125" Click="FinishRegisteredSale">Finalizar Venda</Button>
                                 </StackPanel>
                             </mah:Flyout>
                         </mah:FlyoutsControl>
@@ -75,18 +90,17 @@
                           Background="#E8E8E8" 
                           Height="498">
                         <DockPanel VerticalAlignment="Top" HorizontalAlignment="Left" Height="30">
-                            <Button Content="Novo Produto [F1]" Width="150"/>
+                            <Button Content="Novo Produto [F1]" Click="OpenProductCreationFlyout" Width="150"/>
                             <TextBox Name="SearchProductsTextField" Width="225"></TextBox>
                             <Button Name="SearchProductsButton" Click="SearchProductsButtonAction" Content="Pesquisar Produto [F2]" Width="339"/>
                         </DockPanel>
                         <DataGrid 
-                            IsReadOnly="True" 
-                            AutoGenerateColumns="False" 
-                            Name="productsGrid" 
-                            Margin="0,31,0,0"
-                            ItemsSource="{Binding Products}"
-                            d:DataContext="{d:DesignInstance Type=viewmodels:ProductsViewModel}"
-                            >
+                        IsReadOnly="True" 
+                        AutoGenerateColumns="False" 
+                        Name="productsGrid" 
+                        Margin="0,31,0,0"
+                        ItemsSource="{Binding Products}"
+                        d:DataContext="{d:DesignInstance Type=viewmodels:ProductsViewModel}">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Binding="{Binding Id}" Header="Id do produto"/>
                                 <DataGridTextColumn Binding="{Binding Descrição}" Header="Descrição do produto"/>
@@ -95,8 +109,22 @@
                             </DataGrid.Columns>
                         </DataGrid>
                         <mah:FlyoutsControl Name="ProductsFlyouts">
-                            <mah:Flyout Header="Novo Produto" IsOpen="{Binding NewProductFlyoutOpen}" Position="Right" Width="300">
-
+                            <mah:Flyout 
+                                Name="CreateProduct" 
+                                Header="Novo Produto"
+                                d:DataContext="{d:DesignInstance Type=viewmodels:ProductsViewModel}"
+                                IsOpen="{Binding NewProductFlyoutOpen}" 
+                                Position="Right" 
+                                Width="400">
+                                <StackPanel Name="CreateProductContainer">
+                                    <TextBlock Margin="8, 8, 8, 8">Descrição:</TextBlock>
+                                    <TextBox Margin="8, 8, 8, 8" Width="300"></TextBox>
+                                    <TextBlock Margin="8, 8, 8, 8">Preço:</TextBlock>
+                                    <TextBox Margin="8, 8, 8, 8" Width="300"></TextBox>
+                                    <TextBlock Margin="8, 8, 8, 8">Estoque Inicial:</TextBlock>
+                                    <TextBox Margin="8, 8, 8, 8" Width="300"></TextBox>
+                                    <Button Margin="8, 8, 8, 8" Width="125">Finalizar Produto</Button>
+                                </StackPanel>
                             </mah:Flyout>
                         </mah:FlyoutsControl>
                     </Grid>
@@ -107,26 +135,35 @@
                           Background="#E8E8E8" 
                           Height="498">
                         <DockPanel VerticalAlignment="Top" HorizontalAlignment="Left" Height="30">
-                            <Button Content="Novo Cliente [F1]" Width="150"/>
+                            <Button Content="Novo Cliente [F1]" Click="OpenCustomerCreationFlyout" Width="150"/>
                             <TextBox Name="SearchCustomersTextField" Width="225"></TextBox>
                             <Button Name="SearchCustomersButton" Click="SearchCustomersButtonAction" Content="Pesquisar Cliente [F2]" Width="339"/>
                         </DockPanel>
                         <DataGrid 
-                            IsReadOnly="True" 
-                            AutoGenerateColumns="False" 
-                            Name="customersGrid" 
-                            Margin="0,31,0,0"
-                            ItemsSource="{Binding Customers}"
-                            d:DataContext="{d:DesignInstance Type=viewmodels:CustomersViewModel}"
-                            >
+                    IsReadOnly="True" 
+                    AutoGenerateColumns="False" 
+                    Name="customersGrid" 
+                    Margin="0,31,0,0"
+                    ItemsSource="{Binding Customers}"
+                    d:DataContext="{d:DesignInstance Type=viewmodels:CustomersViewModel}">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Binding="{Binding Id}" Header="Id do cliente"/>
                                 <DataGridTextColumn Binding="{Binding Nome}" Header="Nome do cliente"/>
                             </DataGrid.Columns>
                         </DataGrid>
                         <mah:FlyoutsControl Name="CustomersFlyouts">
-                            <mah:Flyout Header="Novo Cliente" IsOpen="{Binding NewCustomerFlyoutOpen}" Position="Right" Width="300">
-
+                            <mah:Flyout 
+                                Name="CreateCustomer" 
+                                Header="Novo Cliente"
+                                d:DataContext="{d:DesignInstance Type=viewmodels:CustomersViewModel}"
+                                IsOpen="{Binding NewCustomerFlyoutOpen}" 
+                                Position="Right" 
+                                Width="400">
+                                <StackPanel Name="CreateCustomerContainer">
+                                    <TextBlock Margin="8, 8, 8, 8">Nome do Cliente:</TextBlock>
+                                    <TextBox Margin="8, 8, 8, 8" Width="300"></TextBox>
+                                    <Button Margin="8, 8, 8, 8" Width="125">Finalizar Cliente</Button>
+                                </StackPanel>
                             </mah:Flyout>
                         </mah:FlyoutsControl>
                     </Grid>

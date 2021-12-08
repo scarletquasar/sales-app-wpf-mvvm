@@ -16,6 +16,7 @@ namespace SalesApplication.Domain.Visualization
         public string Descrição { get; set; }
         public double Preço { get; set; }
         public int Estoque { get; set; }
+        public int QuantidadeUsada { get; set; }
         public async Task Populate(int id, IRepository<Product> productRepository)
         {
             Product product = (await productRepository.Search(x => x.Id == id)).FirstOrDefault();
