@@ -118,12 +118,12 @@
                                 Width="400">
                                 <StackPanel Name="CreateProductContainer">
                                     <TextBlock Margin="8, 8, 8, 8">Descrição:</TextBlock>
-                                    <TextBox Margin="8, 8, 8, 8" Width="300"></TextBox>
+                                    <TextBox Name="ProductDescription" Margin="8, 8, 8, 8" Width="300"></TextBox>
                                     <TextBlock Margin="8, 8, 8, 8">Preço:</TextBlock>
-                                    <TextBox Margin="8, 8, 8, 8" Width="300"></TextBox>
+                                    <TextBox Name="ProductPrice" Margin="8, 8, 8, 8" Width="300"></TextBox>
                                     <TextBlock Margin="8, 8, 8, 8">Estoque Inicial:</TextBlock>
-                                    <TextBox Margin="8, 8, 8, 8" Width="300"></TextBox>
-                                    <Button Margin="8, 8, 8, 8" Width="125">Finalizar Produto</Button>
+                                    <TextBox Name="ProductStock" Margin="8, 8, 8, 8" Width="300"></TextBox>
+                                    <Button Click="FinishRegisteredProduct" Margin="8, 8, 8, 8" Width="125">Finalizar Produto</Button>
                                 </StackPanel>
                             </mah:Flyout>
                         </mah:FlyoutsControl>
@@ -161,8 +161,8 @@
                                 Width="400">
                                 <StackPanel Name="CreateCustomerContainer">
                                     <TextBlock Margin="8, 8, 8, 8">Nome do Cliente:</TextBlock>
-                                    <TextBox Margin="8, 8, 8, 8" Width="300"></TextBox>
-                                    <Button Margin="8, 8, 8, 8" Width="125">Finalizar Cliente</Button>
+                                    <TextBox Name="CustomerName" Margin="8, 8, 8, 8" Width="300"></TextBox>
+                                    <Button Click="FinishRegisteredCustomer" Margin="8, 8, 8, 8" Width="125">Finalizar Cliente</Button>
                                 </StackPanel>
                             </mah:Flyout>
                         </mah:FlyoutsControl>

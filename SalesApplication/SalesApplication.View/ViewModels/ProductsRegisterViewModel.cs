@@ -1,4 +1,5 @@
 ﻿using SalesApplication.Abstractions;
+using SalesApplication.Data.Responses;
 using SalesApplication.Domain.Business;
 using System;
 using System.Collections.Generic;
@@ -28,13 +29,18 @@ namespace SalesApplication.View.ViewModels
                 OnPropertyChanged();
             }
         }
-        public async Task<IActionResponse> FinishProduct(string name, double price, int stock)
+        public async Task<IActionResponse> FinishProduct(string description, string price, string stock)
         {
-            RegisterProduct.Description = name;
-            RegisterProduct.Price = price;
-            RegisterProduct.Stock = stock;
-            IActionResponse result = await _productRepository.Add(RegisterProduct);
-            return result;
+            if(double.TryParse(price, out double numPrice) && int.TryParse(stock, out int numStock))
+            {
+                RegisterProduct = new Product(description, numPrice, numStock, _productRepository);
+                IActionResponse result = await RegisterProduct.Persist();
+                return result;
+            }
+            else
+            {
+                return new ActionResponse();
+            }
         }
         protected void OnPropertyChanged([CallerMemberName] string name = null)
         {

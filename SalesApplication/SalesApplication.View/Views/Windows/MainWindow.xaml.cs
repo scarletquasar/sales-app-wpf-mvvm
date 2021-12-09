@@ -29,7 +29,8 @@ namespace SalesApplication.View
         private readonly ProductsViewModel productsViewModel;
         private readonly CustomersViewModel customersViewModel;
         private readonly SalesRegisterViewModel salesRegisterViewModel;
-
+        private readonly ProductsRegisterViewModel productsRegisterViewModel;
+        private readonly CustomersRegisterViewModel customersRegisterViewModel;
         public MainWindow()
         {
             InitializeComponent();
@@ -43,6 +44,9 @@ namespace SalesApplication.View
                 ControlInversion.SoldProductService(),
                 ControlInversion.CustomerService()
             );
+            productsRegisterViewModel = new(ControlInversion.ProductService());
+            customersRegisterViewModel = new(ControlInversion.CustomerService());
+
             salesRegisterViewModel.Initialize();
 
             SalesManager.DataContext = salesViewModel;
@@ -100,6 +104,22 @@ namespace SalesApplication.View
         {
             IActionResponse result = await salesRegisterViewModel.FinishSale(SaleCustomerId.Text);
             
+            //TODO: Alterar maneira de notificação final ao usuário
+            System.Windows.MessageBox.Show(((ActionResponse)result).Success.ToString());
+        }
+
+        private async void FinishRegisteredProduct(object sender, RoutedEventArgs e)
+        {
+            IActionResponse result = await productsRegisterViewModel.FinishProduct(ProductDescription.Text, ProductPrice.Text, ProductStock.Text);
+
+            //TODO: Alterar maneira de notificação final ao usuário
+            System.Windows.MessageBox.Show(((ActionResponse)result).Success.ToString());
+        }
+
+        private async void FinishRegisteredCustomer(object sender, RoutedEventArgs e)
+        {
+            IActionResponse result = await customersRegisterViewModel.FinishCustomer(CustomerName.Text);
+
             //TODO: Alterar maneira de notificação final ao usuário
             System.Windows.MessageBox.Show(((ActionResponse)result).Success.ToString());
         }
