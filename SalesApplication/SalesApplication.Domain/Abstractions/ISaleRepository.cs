@@ -10,6 +10,7 @@ namespace SalesApplication.Abstractions
 {
     public interface ISaleRepository : IRepository<Sale>
     {
+        public Task<IEnumerable<Sale>> SearchWithProducts();
         public Task<IEnumerable<Sale>> SearchWithProducts(Expression<Func<Sale, bool>> @where);
     }
 }

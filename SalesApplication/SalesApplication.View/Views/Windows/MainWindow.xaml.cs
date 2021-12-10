@@ -32,7 +32,6 @@ namespace SalesApplication.View
         private readonly SalesRegisterViewModel salesRegisterViewModel;
         private readonly ProductsRegisterViewModel productsRegisterViewModel;
         private readonly CustomersRegisterViewModel customersRegisterViewModel;
-        private readonly SalesReportViewModel salesReportViewModel;
         private readonly DialogService dialogService;
         public MainWindow()
         {
@@ -51,7 +50,6 @@ namespace SalesApplication.View
             );
             productsRegisterViewModel = new(ControlInversion.ProductService(), dialogService);
             customersRegisterViewModel = new(ControlInversion.CustomerService(), dialogService);
-            salesReportViewModel = new SalesReportViewModel(ControlInversion.SaleService());
 
             salesRegisterViewModel.Initialize();
 

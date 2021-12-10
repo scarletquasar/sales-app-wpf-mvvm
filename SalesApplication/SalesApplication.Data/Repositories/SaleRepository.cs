@@ -18,9 +18,13 @@ namespace SalesApplication.Data.Repositories
         {
             _context = context;
         }
-        public async Task<IEnumerable<Sale>> SearchWithProducts(Expression<Func<Sale, bool>> @where)
+        public async Task<IEnumerable<Sale>> SearchWithProducts()
         {
             return await _context.Sales.Include(x => x.Products).ToListAsync();
+        }
+        public async Task<IEnumerable<Sale>> SearchWithProducts(Expression<Func<Sale, bool>> @where)
+        {
+            return await _context.Sales.Include(x => x.Products).Where(where).ToListAsync();
         }
     }
 }

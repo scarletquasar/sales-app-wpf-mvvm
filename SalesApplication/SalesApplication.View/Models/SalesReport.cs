@@ -24,16 +24,24 @@ namespace SalesApplication.View.Models
         {
             SalesReport salesReport = new(saleRepository);
 
-            if (!DateTime.TryParse(initialDate, out DateTime initDate) || !DateTime.TryParse(finalDate, out DateTime finDate)) return "";
-            if (!int.TryParse(customerId, out int custId)) custId = 0;
+            if (!DateTime.TryParse(initialDate, out DateTime initDate) || !DateTime.TryParse(finalDate, out DateTime finDate))
+            {
+                return "";
+            }
+
+            if (!int.TryParse(customerId, out int custId))
+            {
+                custId = 0;
+            }
 
             /* Se o id de cliente informado for 0, ele retornará todas as vendas registradas dentro do
              * espaço de tempo informado, caso contrário ele exibirá as vendas do cliente com ID exato,
              * caso exista.
              */
-            if (custId != 0)
+            if(custId > 0)
             {
-                salesReport.Sales = (await saleRepository.SearchWithProducts(x => x.CreatedAt <= finDate && x.CreatedAt >= initDate && x.CustomerId == custId)).ToList();
+                var filter = await saleRepository.SearchWithProducts(x => x.CustomerId == custId);
+                salesReport.Sales = (filter.Where(x => x.CreatedAt <= finDate && x.CreatedAt >= initDate)).ToList();
             }
             else
             {
