@@ -8,14 +8,14 @@ namespace SalesApplication.Database
         private const string CONNECTIONSTRING = @"Server=localhost;Port=5432;User Id=postgres;Password=123;";
         public static DbContextOptions<GeneralContext> Postgres()
         {
-            var optionsBuilder = new DbContextOptionsBuilder<GeneralContext>();
+            DbContextOptionsBuilder<GeneralContext> optionsBuilder = new();
             optionsBuilder.UseNpgsql(CONNECTIONSTRING);
             return optionsBuilder.Options;
         }
 
         public static DbContextOptions<GeneralContext> InMemory()
         {
-            var optionsBuilder = new DbContextOptionsBuilder<GeneralContext>();
+            DbContextOptionsBuilder<GeneralContext> optionsBuilder = new();
             optionsBuilder.UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString());
             return optionsBuilder.Options;
         }

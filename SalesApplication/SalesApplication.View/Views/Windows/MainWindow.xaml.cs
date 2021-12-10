@@ -15,6 +15,7 @@ using System.Windows.Shapes;
 using MahApps.Metro.Controls;
 using SalesApplication.Abstractions;
 using SalesApplication.Data.Responses;
+using SalesApplication.View.Models;
 using SalesApplication.View.Services;
 using SalesApplication.View.ViewModels;
 
@@ -31,9 +32,12 @@ namespace SalesApplication.View
         private readonly SalesRegisterViewModel salesRegisterViewModel;
         private readonly ProductsRegisterViewModel productsRegisterViewModel;
         private readonly CustomersRegisterViewModel customersRegisterViewModel;
+        private readonly SalesReportViewModel salesReportViewModel;
+        private readonly DialogService dialogService;
         public MainWindow()
         {
             InitializeComponent();
+            dialogService = new DialogService();
 
             productsViewModel = new(ControlInversion.ProductService());
             customersViewModel = new(ControlInversion.CustomerService());
@@ -42,10 +46,12 @@ namespace SalesApplication.View
                 ControlInversion.SaleService(),
                 ControlInversion.ProductService(),
                 ControlInversion.SoldProductService(),
-                ControlInversion.CustomerService()
+                ControlInversion.CustomerService(),
+                dialogService
             );
-            productsRegisterViewModel = new(ControlInversion.ProductService());
-            customersRegisterViewModel = new(ControlInversion.CustomerService());
+            productsRegisterViewModel = new(ControlInversion.ProductService(), dialogService);
+            customersRegisterViewModel = new(ControlInversion.CustomerService(), dialogService);
+            salesReportViewModel = new SalesReportViewModel(ControlInversion.SaleService());
 
             salesRegisterViewModel.Initialize();
 
@@ -102,26 +108,26 @@ namespace SalesApplication.View
 
         private async void FinishRegisteredSale(object sender, RoutedEventArgs e)
         {
-            IActionResponse result = await salesRegisterViewModel.FinishSale(SaleCustomerId.Text);
-            
-            //TODO: Alterar maneira de notificação final ao usuário
-            System.Windows.MessageBox.Show(((ActionResponse)result).Success.ToString());
+            await salesRegisterViewModel.FinishSale(SaleCustomerId.Text);
         }
 
         private async void FinishRegisteredProduct(object sender, RoutedEventArgs e)
         {
-            IActionResponse result = await productsRegisterViewModel.FinishProduct(ProductDescription.Text, ProductPrice.Text, ProductStock.Text);
-
-            //TODO: Alterar maneira de notificação final ao usuário
-            System.Windows.MessageBox.Show(((ActionResponse)result).Success.ToString());
+            await productsRegisterViewModel.FinishProduct(ProductDescription.Text, ProductPrice.Text, ProductStock.Text);
         }
 
         private async void FinishRegisteredCustomer(object sender, RoutedEventArgs e)
         {
-            IActionResponse result = await customersRegisterViewModel.FinishCustomer(CustomerName.Text);
+            await customersRegisterViewModel.FinishCustomer(CustomerName.Text);
+        }
 
-            //TODO: Alterar maneira de notificação final ao usuário
-            System.Windows.MessageBox.Show(((ActionResponse)result).Success.ToString());
+        private async void GenerateReport(object sender, RoutedEventArgs e)
+        {
+            SaleReportTarget.NavigateToString(await SalesReport.ExportReportAsync(
+                InitialSaleReportDate.Text,
+                FinalSaleReportDate.Text,
+                SaleReportCustomerId.Text,
+                ControlInversion.ReportableSaleService()));
         }
     }
 }

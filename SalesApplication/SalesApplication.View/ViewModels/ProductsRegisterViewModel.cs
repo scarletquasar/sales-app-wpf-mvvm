@@ -1,6 +1,7 @@
 ﻿using SalesApplication.Abstractions;
 using SalesApplication.Data.Responses;
 using SalesApplication.Domain.Business;
+using SalesApplication.View.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -13,10 +14,15 @@ namespace SalesApplication.View.ViewModels
 {
     public class ProductsRegisterViewModel : INotifyPropertyChanged
     {
-        public ProductsRegisterViewModel(IRepository<Product> productRepository)
+        public ProductsRegisterViewModel(
+            IRepository<Product> productRepository,
+            IDialogService dialogService
+        )
         {
+            _dialogService = dialogService;
             _productRepository = productRepository;
         }
+        private readonly IDialogService _dialogService;
         private readonly IRepository<Product> _productRepository;
         public event PropertyChangedEventHandler PropertyChanged;
         private Product registerProduct;
@@ -34,11 +40,22 @@ namespace SalesApplication.View.ViewModels
             if(double.TryParse(price, out double numPrice) && int.TryParse(stock, out int numStock))
             {
                 RegisterProduct = new Product(description, numPrice, numStock, _productRepository);
-                IActionResponse result = await RegisterProduct.Persist();
+                ActionResponse result = (ActionResponse)await RegisterProduct.Persist();
+
+                if(result.Success)
+                {
+                    _dialogService.Show("Produto registrado com sucesso");
+                }
+                else
+                {
+                    _dialogService.Show("Ocorreu um erro ao registrar o produto");
+                }
+
                 return result;
             }
             else
             {
+                _dialogService.Show("Verifique as informações de registro inseridas");
                 return new ActionResponse();
             }
         }

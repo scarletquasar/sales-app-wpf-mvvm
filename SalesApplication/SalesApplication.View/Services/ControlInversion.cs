@@ -27,6 +27,7 @@ namespace SalesApplication.View.Services
             _builder.RegisterType<Repository<Product>>().As<IRepository<Product>>().WithParameter("context", new GeneralContext(ContextOptions.Postgres())).InstancePerDependency();
             _builder.RegisterType<Repository<Sale>>().As<IRepository<Sale>>().WithParameter("context", new GeneralContext(ContextOptions.Postgres())).InstancePerDependency();
             _builder.RegisterType<Repository<SoldProduct>>().As<IRepository<SoldProduct>>().WithParameter("context", new GeneralContext(ContextOptions.Postgres())).InstancePerDependency();
+            _builder.RegisterType<SaleRepository>().As<ISaleRepository>().WithParameter("context", new GeneralContext(ContextOptions.Postgres())).InstancePerDependency();
 
             _scope = _builder.Build();
         }
@@ -44,6 +45,11 @@ namespace SalesApplication.View.Services
         public static IRepository<Sale> SaleService()
         {
             return _scope.Resolve<IRepository<Sale>>();
+        }
+
+        public static ISaleRepository ReportableSaleService()
+        {
+            return _scope.Resolve<ISaleRepository>();
         }
 
         public static IRepository<SoldProduct> SoldProductService()

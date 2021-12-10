@@ -3,6 +3,7 @@ using SalesApplication.Data.Repositories;
 using SalesApplication.Data.Responses;
 using SalesApplication.Domain.Business;
 using SalesApplication.Domain.Visualization;
+using SalesApplication.View.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -17,21 +18,24 @@ namespace SalesApplication.View.ViewModels
     public class SalesRegisterViewModel : INotifyPropertyChanged
     {
         public SalesRegisterViewModel(
-            IRepository<Sale> saleRepository, 
+            IRepository<Sale> saleRepository,
             IRepository<Product> productRepository,
             IRepository<SoldProduct> soldProductRepository,
-            IRepository<Customer> customerRepository
+            IRepository<Customer> customerRepository,
+            IDialogService dialogService
         )
         {
             _saleRepository = saleRepository;
             _productRepository = productRepository;
             _soldProductRepository = soldProductRepository;
             _customerRepository = customerRepository;
+            _dialogService = dialogService;
         }
         private readonly IRepository<Sale> _saleRepository;
         private readonly IRepository<Product> _productRepository;
         private readonly IRepository<SoldProduct> _soldProductRepository;
         private readonly IRepository<Customer> _customerRepository;
+        private readonly IDialogService _dialogService;
 
         public event PropertyChangedEventHandler PropertyChanged;
         private Sale registerSale;
@@ -78,15 +82,29 @@ namespace SalesApplication.View.ViewModels
                 if(targetCustomer != null)
                 {
                     RegisterSale.CustomerId = targetCustomerId;
-                    return await RegisterSale.Persist();
+
+                    ActionResponse result = (ActionResponse)await RegisterSale.Persist();
+
+                    if(result.Success)
+                    {
+                        _dialogService.Show("Venda registrada com sucesso");
+                    }
+                    else
+                    {
+                        _dialogService.Show("Ocorreu um erro ao registrar a venda");
+                    }
+
+                    return result;
                 }
                 else
                 {
+                    _dialogService.Show("Verifique as informações do cliente inseridas");
                     return new ActionResponse();
                 }
             }
             else
             {
+                _dialogService.Show("Verifique as informações da venda inseridas");
                 return new ActionResponse();
             }
         }
