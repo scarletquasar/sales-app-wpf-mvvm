@@ -16,10 +16,9 @@ namespace SalesApplication.Domain.Business
             this._customerRepository = customerRepository;
             this.Name = name;
         }
-        public async Task<IActionResponse> Persist()
+        public async Task Persist()
         {
-            var result = await _customerRepository.Add(this);
-            return result;
+            await _customerRepository.Add(this);
         }
         public async Task<bool> Exists(int customerId)
         {

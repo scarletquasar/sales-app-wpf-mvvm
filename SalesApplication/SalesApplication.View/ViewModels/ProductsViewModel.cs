@@ -9,17 +9,19 @@ using System.Threading.Tasks;
 using SalesApplication.Domain.Visualization;
 using System.Runtime.CompilerServices;
 using System.ComponentModel;
+using Prism.Commands;
 
 namespace SalesApplication.View.ViewModels
 {
     public class ProductsViewModel : INotifyPropertyChanged
     {
+        public DelegateCommand GetProductsCommand { get; set; }
         public ProductsViewModel(IRepository<Product> productRepository)
         {
             _productRepository = productRepository;
+            GetProductsCommand = new(GetProducts);
         }
         private readonly IRepository<Product> _productRepository;
-        private ObservableCollection<ObservableProduct> products;
         private bool newProductFlyoutOpen;
         public bool NewProductFlyoutOpen
         {
@@ -30,6 +32,8 @@ namespace SalesApplication.View.ViewModels
                 OnPropertyChanged();
             }
         }
+
+        private ObservableCollection<ObservableProduct> products;
         public event PropertyChangedEventHandler PropertyChanged;
         public ObservableCollection<ObservableProduct> Products
         {
@@ -40,18 +44,30 @@ namespace SalesApplication.View.ViewModels
                 OnPropertyChanged();
             }
         }
-        public async Task GetProducts(string search)
+
+        private string search = "";
+        public string Search
+        {
+            get => search;
+            set
+            {
+                search = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public async void GetProducts()
         {
             List<Product> rawProducts;
             ObservableCollection<ObservableProduct> _obsProducts = new();
 
-            if (uint.TryParse(search, out uint id))
+            if (uint.TryParse(Search, out uint id))
             {
                 rawProducts = (await _productRepository.Search(x => x.Id == id)).ToList();
             }
             else
             {
-                rawProducts = (await _productRepository.Search(x => x.Description.Contains(search))).ToList();
+                rawProducts = (await _productRepository.Search(x => x.Description.Contains(Search))).ToList();
             }
 
             foreach (Product item in rawProducts)

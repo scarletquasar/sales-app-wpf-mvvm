@@ -5,15 +5,11 @@ namespace SalesApplication.Database
 {
     public class GeneralContext : DbContext
     {
-        public GeneralContext() { }
         public GeneralContext(DbContextOptions<GeneralContext> opt) : base(opt) { }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<Sale> Sales { get; set; }
         public DbSet<SoldProduct> SoldProducts { get; set; }
-
-        public bool TestCompatibilityMode = false;
-        private const string CONNECTIONSTRING = @"Server=localhost;Port=5432;User Id=postgres;Password=123;";
         private void CustomerConfig(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Customer>(entity =>
@@ -75,14 +71,6 @@ namespace SalesApplication.Database
             SaleConfig(modelBuilder);
             ProductConfig(modelBuilder);
             SoldProductConfig(modelBuilder);
-        }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-                optionsBuilder.UseNpgsql(CONNECTIONSTRING);
-            }
         }
     }
 }

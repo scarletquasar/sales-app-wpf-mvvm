@@ -1,4 +1,5 @@
-﻿using SalesApplication.Abstractions;
+﻿using Prism.Commands;
+using SalesApplication.Abstractions;
 using SalesApplication.Domain.Business;
 using SalesApplication.Domain.Visualization;
 using System;
@@ -14,12 +15,14 @@ namespace SalesApplication.View.ViewModels
 {
     public class CustomersViewModel : INotifyPropertyChanged
     {
+        public DelegateCommand GetCustomersCommand { get; set; }
         public CustomersViewModel(IRepository<Customer> customerRepository)
         {
             _customerRepository = customerRepository;
+            GetCustomersCommand = new(GetCustomers);
         }
+
         private readonly IRepository<Customer> _customerRepository;
-        private ObservableCollection<ObservableCustomer> customers;
         private bool newCustomerFlyoutOpen;
         public bool NewCustomerFlyoutOpen
         {
@@ -31,6 +34,7 @@ namespace SalesApplication.View.ViewModels
             }
         }
         public event PropertyChangedEventHandler PropertyChanged;
+        private ObservableCollection<ObservableCustomer> customers;
         public ObservableCollection<ObservableCustomer> Customers
         {
             get => customers;
@@ -40,18 +44,30 @@ namespace SalesApplication.View.ViewModels
                 OnPropertyChanged();
             }
         }
-        public async Task GetCustomers(string search)
+
+        private string search = "";
+        public string Search
+        {
+            get => search;
+            set
+            {
+                search = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public async void GetCustomers()
         {
             List<Customer> rawCustomers;
             ObservableCollection<ObservableCustomer> _obsCustomers = new();
 
-            if (uint.TryParse(search, out uint id))
+            if (uint.TryParse(Search, out uint id))
             {
                 rawCustomers = (await _customerRepository.Search(x => x.Id == id)).ToList();
             }
             else
             {
-                rawCustomers = (await _customerRepository.Search(x => x.Name.Contains(search))).ToList();
+                rawCustomers = (await _customerRepository.Search(x => x.Name.Contains(Search))).ToList();
             }
 
             foreach (Customer item in rawCustomers)
@@ -62,7 +78,6 @@ namespace SalesApplication.View.ViewModels
             }
 
             Customers = _obsCustomers;
-            OnPropertyChanged();
         }
         protected void OnPropertyChanged([CallerMemberName] string name = null)
         {

@@ -1,0 +1,29 @@
+﻿<UserControl x:Class="SalesApplication.View.Views.Components.Customers"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:viewmodels="clr-namespace:SalesApplication.View.ViewModels" 
+             d:DataContext="{d:DesignInstance Type=viewmodels:CustomersViewModel}"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid Name="customersContainer" Height="498">
+        <DockPanel VerticalAlignment="Top" HorizontalAlignment="Left" Height="30">
+            <Button Content="Novo Cliente [F1]" Click="OpenFlyout" Width="150"/>
+            <TextBox Name="SearchCustomersTextField"  Text="{Binding Search}" Width="225"></TextBox>
+            <Button Name="SearchCustomersButton" Command="{Binding GetCustomersCommand}" Content="Pesquisar Cliente [F2]" Width="339"/>
+        </DockPanel>
+        <DataGrid 
+            IsReadOnly="True" 
+            AutoGenerateColumns="False"
+            Name="customersGrid"
+            Margin="0,31,0,0"
+            ItemsSource="{Binding Customers}"
+            >
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding Id}" Header="Id do cliente"/>
+                <DataGridTextColumn Binding="{Binding Nome}" Header="Nome do cliente"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</UserControl>

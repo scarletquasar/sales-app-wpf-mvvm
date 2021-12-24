@@ -4,6 +4,8 @@ using SalesApplication.Abstractions;
 using SalesApplication.Data.Repositories;
 using SalesApplication.Database;
 using SalesApplication.Domain.Business;
+using SalesApplication.View.Abstractions;
+using SalesApplication.View.ViewModels;
 
 namespace SalesApplication.View.Services
 {
@@ -22,39 +24,33 @@ namespace SalesApplication.View.Services
 
         public static void RegisterDependencies()
         {
+            /* Geral */
             _builder.RegisterType<GeneralContext>().WithParameter(new TypedParameter(typeof(DbContextOptions<GeneralContext>), ContextOptions.Postgres())).InstancePerDependency();
-            _builder.RegisterType<Repository<Customer>>().As<IRepository<Customer>>().WithParameter("context", new GeneralContext(ContextOptions.Postgres())).InstancePerDependency();
-            _builder.RegisterType<Repository<Product>>().As<IRepository<Product>>().WithParameter("context", new GeneralContext(ContextOptions.Postgres())).InstancePerDependency();
-            _builder.RegisterType<Repository<Sale>>().As<IRepository<Sale>>().WithParameter("context", new GeneralContext(ContextOptions.Postgres())).InstancePerDependency();
-            _builder.RegisterType<Repository<SoldProduct>>().As<IRepository<SoldProduct>>().WithParameter("context", new GeneralContext(ContextOptions.Postgres())).InstancePerDependency();
-            _builder.RegisterType<SaleRepository>().As<ISaleRepository>().WithParameter("context", new GeneralContext(ContextOptions.Postgres())).InstancePerDependency();
+            _builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>)).InstancePerDependency();
+            _builder.RegisterType<DialogService>().As<IDialogService>().InstancePerDependency();
+            _builder.RegisterType<MainWindow>().AsSelf().InstancePerDependency();
+
+            /* Repositórios */
+            _builder.RegisterType<Repository<Customer>>().As<IRepository<Customer>>().InstancePerDependency();
+            _builder.RegisterType<Repository<Product>>().As<IRepository<Product>>().InstancePerDependency();
+            _builder.RegisterType<Repository<Sale>>().As<IRepository<Sale>>().InstancePerDependency();
+            _builder.RegisterType<Repository<SoldProduct>>().As<IRepository<SoldProduct>>().InstancePerDependency();
+            _builder.RegisterType<SaleRepository>().As<ISaleRepository>().InstancePerDependency();
+
+            /* ViewModels */
+            _builder.RegisterType<SalesViewModel>().AsSelf().SingleInstance();
+            _builder.RegisterType<ProductsViewModel>().AsSelf().SingleInstance();
+            _builder.RegisterType<CustomersViewModel>().AsSelf().SingleInstance();
+            _builder.RegisterType<SalesRegisterViewModel>().AsSelf().SingleInstance();
+            _builder.RegisterType<ProductsRegisterViewModel>().AsSelf().SingleInstance();
+            _builder.RegisterType<CustomersRegisterViewModel>().AsSelf().SingleInstance();
 
             _scope = _builder.Build();
         }
 
-        public static IRepository<Product> ProductService()
+        public static T ResolveDependency<T>()
         {
-            return _scope.Resolve<IRepository<Product>>();
-        }
-
-        public static IRepository<Customer> CustomerService()
-        {
-            return _scope.Resolve<IRepository<Customer>>();
-        }
-
-        public static IRepository<Sale> SaleService()
-        {
-            return _scope.Resolve<IRepository<Sale>>();
-        }
-
-        public static ISaleRepository ReportableSaleService()
-        {
-            return _scope.Resolve<ISaleRepository>();
-        }
-
-        public static IRepository<SoldProduct> SoldProductService()
-        {
-            return _scope.Resolve<IRepository<SoldProduct>>();
+            return GetChildContainer().Resolve<T>();
         }
     }
 }

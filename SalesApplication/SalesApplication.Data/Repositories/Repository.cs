@@ -6,7 +6,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SalesApplication.Abstractions;
-using SalesApplication.Data.Responses;
 using SalesApplication.Database;
 using SalesApplication.Domain.Business;
 
@@ -31,23 +30,15 @@ namespace SalesApplication.Data.Repositories
         {
             return await _context.Set<T>().Where(@where).ToListAsync();
         }
-        public async Task<IActionResponse> Add(T entity)
+        public async Task Add(T entity)
         {
-            ActionResponse result = new();
-            try
-            {
-                var resultEntry = await _context.Set<T>().AddAsync(entity);
-                await Save();
-                result.Result = resultEntry.Entity;
-                result.Success = true;
-            }
-            catch(Exception e)
-            {
-                result.Message = e.ToString();
-                result.Result = null;
-                result.Success = false;
-            }
-            return result;
+            await _context.Set<T>().AddAsync(entity);
+            await Save();
+        }
+
+        public void Dispose()
+        {
+            _context.Dispose();
         }
     }
 }

@@ -27,10 +27,9 @@ namespace SalesApplication.Domain.Business
             this.Stock = initialStock;
             this._productRepository = productRepository;
         }
-        public async Task<IActionResponse> Persist()
+        public async Task Persist()
         {
-            var result = await _productRepository.Add(this);
-            return result;
+            await _productRepository.Add(this);
         }
         public async Task<bool> Exists(int productId)
         {

@@ -1,15 +1,24 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
+using Npgsql;
 
 namespace SalesApplication.Database
 {
     public class ContextOptions
     {
-        private const string CONNECTIONSTRING = @"Server=localhost;Port=5432;User Id=postgres;Password=123;";
         public static DbContextOptions<GeneralContext> Postgres()
         {
+            var connectionStringBuilder = new NpgsqlConnectionStringBuilder()
+            {
+                Host = "localhost",
+                Port = 5432,
+                Username = "postgres",
+                Password = "123",
+                Database = "salesapp"
+            };
+
             DbContextOptionsBuilder<GeneralContext> optionsBuilder = new();
-            optionsBuilder.UseNpgsql(CONNECTIONSTRING);
+            optionsBuilder.UseNpgsql(connectionStringBuilder.ConnectionString);
             return optionsBuilder.Options;
         }
 

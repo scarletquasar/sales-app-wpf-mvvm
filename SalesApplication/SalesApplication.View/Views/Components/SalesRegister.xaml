@@ -1,0 +1,50 @@
+﻿<UserControl x:Class="SalesApplication.View.Views.Components.SalesRegister"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:viewmodels="clr-namespace:SalesApplication.View.ViewModels" 
+             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <mah:FlyoutsControl Name="SalesFlyouts">
+            <mah:Flyout 
+                Name="CreateSale" 
+                Header="Nova Venda"
+                d:DataContext="{d:DesignInstance Type=viewmodels:SalesViewModel}"
+                IsOpen="{Binding NewSaleFlyoutOpen}" 
+                Position="Right" 
+                Width="400">
+                <StackPanel Name="CreateSaleContainer">
+                    <TextBlock Margin="8, 8, 8, 8">Adicionar Produto [Id/Quantidade]:</TextBlock>
+                    <DockPanel Margin="8, 8, 8, 8" VerticalAlignment="Center">
+                        <TextBox Name="SaleProductId" Width="100"></TextBox>
+                        <TextBox Name="SaleProductQuantity" Width="100"></TextBox>
+                        <Button Click="TryRegisterProductInSale" Width="55">+</Button>
+                    </DockPanel>
+                    <Viewbox Width="380">
+                        <DataGrid
+                            Name="ProductRegisterDataGrid"
+                            ItemsSource="{Binding RegisterSaleProducts}"
+                            d:DataContext="{d:DesignInstance Type=viewmodels:SalesRegisterViewModel}"
+                            AutoGenerateColumns="False"
+                            Margin="8, 8, 8, 8"
+                            >
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Binding="{Binding Id}" Header="Id do produto"/>
+                                <DataGridTextColumn Binding="{Binding Descrição}" Header="Descrição do produto"/>
+                                <DataGridTextColumn Binding="{Binding Preço}" Header="Preço do produto"/>
+                                <DataGridTextColumn Binding="{Binding Estoque}" Header="Estoque disponível"/>
+                                <DataGridTextColumn Binding="{Binding QuantidadeUsada}" Header="Qtd/Venda"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Viewbox>
+                    <TextBlock Margin="8, 8, 8, 8">Id do Cliente:</TextBlock>
+                    <TextBox Margin="8, 8, 8, 8" HorizontalAlignment="Left" Name="SaleCustomerId" Width="200"></TextBox>
+                    <Button Margin="8, 8, 8, 8" Width="125" Click="FinishRegisteredSale">Finalizar Venda</Button>
+                </StackPanel>
+            </mah:Flyout>
+        </mah:FlyoutsControl>
+    </Grid>
+</UserControl>

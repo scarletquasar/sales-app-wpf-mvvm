@@ -1,13 +1,8 @@
 ﻿using SalesApplication.Abstractions;
-using SalesApplication.Data.Responses;
 using SalesApplication.Domain.Business;
 using SalesApplication.View.Abstractions;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace SalesApplication.View.ViewModels
@@ -35,27 +30,26 @@ namespace SalesApplication.View.ViewModels
                 OnPropertyChanged();
             }
         }
-        public async Task<IActionResponse> FinishCustomer(string name)
+        public async Task FinishCustomer(string name)
         {
             if(name == "")
             {
                 _dialogService.Show("O nome do cliente não pode ser vazio");
-                return new ActionResponse();
+                return;
             }
 
             RegisterCustomer = new Customer(name, _customerRepository);
-            ActionResponse result = (ActionResponse)await RegisterCustomer.Persist();
 
-            if (result.Success)
+            try
             {
+                await RegisterCustomer.Persist();
                 _dialogService.Show("Cliente registrado com sucesso");
             }
-            else
+            catch
             {
                 _dialogService.Show("Ocorreu um erro ao registrar o cliente");
             }
-
-            return result;
+            return;
         }
         protected void OnPropertyChanged([CallerMemberName] string name = null)
         {

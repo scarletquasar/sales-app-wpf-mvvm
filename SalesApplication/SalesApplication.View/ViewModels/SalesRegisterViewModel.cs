@@ -1,16 +1,13 @@
-﻿using SalesApplication.Abstractions;
-using SalesApplication.Data.Repositories;
-using SalesApplication.Data.Responses;
+﻿using Microsoft.EntityFrameworkCore;
+using SalesApplication.Abstractions;
 using SalesApplication.Domain.Business;
 using SalesApplication.Domain.Visualization;
 using SalesApplication.View.Abstractions;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace SalesApplication.View.ViewModels
@@ -74,38 +71,38 @@ namespace SalesApplication.View.ViewModels
                 registerSaleProducts.Add(observableProduct);
             }
         }
-        public async Task<IActionResponse> FinishSale(string customerId)
+        public async Task FinishSale(string customerId)
         {
             if (int.TryParse(customerId, out int targetCustomerId))
             {
                 Customer targetCustomer = (await _customerRepository.Search(x => x.Id == targetCustomerId)).FirstOrDefault();
+
                 if(targetCustomer != null)
                 {
-                    RegisterSale.CustomerId = targetCustomerId;
+                    RegisterSale.CustomerId = targetCustomer.Id;
 
-                    ActionResponse result = (ActionResponse)await RegisterSale.Persist();
-
-                    if(result.Success)
+                    try
+                    {
+                        await RegisterSale.Persist();
+                        _dialogService.Show("Venda registrada com sucesso");
+                    }
+                    catch(DbUpdateException)
                     {
                         _dialogService.Show("Venda registrada com sucesso");
                     }
-                    else
+                    catch(Exception e)
                     {
-                        _dialogService.Show("Ocorreu um erro ao registrar a venda");
+                        _dialogService.Show(e.ToString());
                     }
-
-                    return result;
                 }
                 else
                 {
                     _dialogService.Show("Verifique as informações do cliente inseridas");
-                    return new ActionResponse();
                 }
             }
             else
             {
                 _dialogService.Show("Verifique as informações da venda inseridas");
-                return new ActionResponse();
             }
         }
         protected void OnPropertyChanged([CallerMemberName] string name = null)

@@ -1,13 +1,8 @@
 ﻿using SalesApplication.Abstractions;
-using SalesApplication.Data.Responses;
 using SalesApplication.Domain.Business;
 using SalesApplication.View.Abstractions;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace SalesApplication.View.ViewModels
@@ -35,28 +30,24 @@ namespace SalesApplication.View.ViewModels
                 OnPropertyChanged();
             }
         }
-        public async Task<IActionResponse> FinishProduct(string description, string price, string stock)
+        public async Task FinishProduct(string description, string price, string stock)
         {
             if(double.TryParse(price, out double numPrice) && int.TryParse(stock, out int numStock))
             {
                 RegisterProduct = new Product(description, numPrice, numStock, _productRepository);
-                ActionResponse result = (ActionResponse)await RegisterProduct.Persist();
-
-                if(result.Success)
+                try
                 {
+                    await RegisterProduct.Persist();
                     _dialogService.Show("Produto registrado com sucesso");
                 }
-                else
+                catch
                 {
                     _dialogService.Show("Ocorreu um erro ao registrar o produto");
                 }
-
-                return result;
             }
             else
             {
                 _dialogService.Show("Verifique as informações de registro inseridas");
-                return new ActionResponse();
             }
         }
         protected void OnPropertyChanged([CallerMemberName] string name = null)

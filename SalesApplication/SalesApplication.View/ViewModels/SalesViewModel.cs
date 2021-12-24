@@ -11,20 +11,25 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using Prism.Commands;
 
 namespace SalesApplication.View.ViewModels
 {
     public class SalesViewModel : INotifyPropertyChanged
     {
+        public DelegateCommand GetSalesCommand { get; set; }
+        public DelegateCommand GetSalesByCustomerCommand { get; set; }
         public SalesViewModel(IRepository<Sale> saleRepository, IRepository<Customer> customerRepository)
         {
             _saleRepository = saleRepository;
             _customerRepository = customerRepository;
+            GetSalesCommand = new(GetSales);
+            GetSalesByCustomerCommand = new(GetSalesByCustomerId);
         }
 
         private readonly IRepository<Sale> _saleRepository;
         private readonly IRepository<Customer> _customerRepository;
-        private ObservableCollection<ObservableSale> sales;
+        
         private bool newSaleFlyoutOpen;
         public bool NewSaleFlyoutOpen
         {
@@ -37,6 +42,8 @@ namespace SalesApplication.View.ViewModels
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
+
+        private ObservableCollection<ObservableSale> sales;
         public ObservableCollection<ObservableSale> Sales
         {
             get => sales;
@@ -47,31 +54,85 @@ namespace SalesApplication.View.ViewModels
             }
         }
 
-        public async Task GetSales(string search, bool getByCustomerId)
+        private string search = "";
+        public string Search
         {
-            List<Sale> rawSales;
-            ObservableCollection<ObservableSale> _obsSales = new();
-
-            if (uint.TryParse(search, out uint id))
+            get => search;
+            set
             {
-                rawSales = getByCustomerId
-                    ? (await _saleRepository.Search(x => x.CustomerId == id)).ToList()
-                    : (await _saleRepository.Search(x => x.Id == id)).ToList();
+                search = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public async void GetSales()
+        {
+            IEnumerable<ObservableSale> rawSales;
+
+            if(uint.TryParse(Search, out uint id))
+            {
+                rawSales = (from s in await _saleRepository.Search()
+                           join c in (await _customerRepository.Search()) on s.CustomerId equals c.Id
+                           select new ObservableSale
+                           {
+                                Id = s.Id,
+                                IdCliente = s.CustomerId,
+                                NomeCliente = c.Name,
+                                PreçoTotal = s.TotalPrice,
+                                FeitaEm = s.CreatedAt
+                           })
+                           .Where(sale => sale.Id == id);
             }
             else
             {
-                rawSales = (await _saleRepository.Search()).ToList();
-            }
-                
-            foreach (Sale item in rawSales)
-            {
-                ObservableSale result = new();
-                await result.Populate(item.Id, _saleRepository, _customerRepository);
-                _obsSales.Add(result);
+                rawSales = (from s in await _saleRepository.Search()
+                           join c in (await _customerRepository.Search()) on s.CustomerId equals c.Id
+                           select new ObservableSale
+                           {
+                                Id = s.Id,
+                                IdCliente = s.CustomerId,
+                                NomeCliente = c.Name,
+                                PreçoTotal = s.TotalPrice,
+                                FeitaEm = s.CreatedAt
+                           });
             }
 
-            Sales = _obsSales;
-            OnPropertyChanged();
+            Sales = new ObservableCollection<ObservableSale>(rawSales.ToList());
+        }
+
+        public async void GetSalesByCustomerId()
+        {
+            IEnumerable<ObservableSale> rawSales;
+
+            if (uint.TryParse(Search, out uint id))
+            {
+                rawSales = (from s in await _saleRepository.Search()
+                           join c in (await _customerRepository.Search()) on s.CustomerId equals c.Id
+                           select new ObservableSale
+                           {
+                               Id = s.Id,
+                               IdCliente = s.CustomerId,
+                               NomeCliente = c.Name,
+                               PreçoTotal = s.TotalPrice,
+                               FeitaEm = s.CreatedAt
+                           })
+                           .Where(sale => sale.IdCliente == id);
+            }
+            else
+            {
+                rawSales = (from s in await _saleRepository.Search()
+                           join c in (await _customerRepository.Search()) on s.CustomerId equals c.Id
+                           select new ObservableSale
+                           {
+                               Id = s.Id,
+                               IdCliente = s.CustomerId,
+                               NomeCliente = c.Name,
+                               PreçoTotal = s.TotalPrice,
+                               FeitaEm = s.CreatedAt
+                           });
+            }
+
+            Sales = new ObservableCollection<ObservableSale>(rawSales.ToList());
         }
 
         protected void OnPropertyChanged([CallerMemberName] string name = null)

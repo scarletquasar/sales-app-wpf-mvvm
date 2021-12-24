@@ -18,7 +18,7 @@ namespace SalesApplication.View.Models
         {
             _saleRepository = saleRepository;
         }
-        private IRepository<Sale> _saleRepository;
+        private readonly IRepository<Sale> _saleRepository;
         public List<Sale> Sales { get; set; }
         public static async Task<string> ExportReportAsync(string initialDate, string finalDate, string customerId, ISaleRepository saleRepository)
         {
@@ -40,8 +40,8 @@ namespace SalesApplication.View.Models
              */
             if(custId > 0)
             {
-                var filter = await saleRepository.SearchWithProducts(x => x.CustomerId == custId);
-                salesReport.Sales = (filter.Where(x => x.CreatedAt <= finDate && x.CreatedAt >= initDate)).ToList();
+                IEnumerable<Sale> filter = await saleRepository.SearchWithProducts(x => x.CustomerId == custId);
+                salesReport.Sales = filter.Where(x => x.CreatedAt <= finDate && x.CreatedAt >= initDate).ToList();
             }
             else
             {

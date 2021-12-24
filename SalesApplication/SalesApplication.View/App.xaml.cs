@@ -1,4 +1,8 @@
-﻿using SalesApplication.View.Services;
+﻿using SalesApplication.Abstractions;
+using SalesApplication.Data.Repositories;
+using SalesApplication.View.Abstractions;
+using SalesApplication.View.Services;
+using SalesApplication.View.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -14,9 +18,14 @@ namespace SalesApplication.View
     /// </summary>
     public partial class App : Application
     {
+        private MainWindow DefaultWindow;
         protected override void OnStartup(StartupEventArgs e)
         {
             ControlInversion.RegisterDependencies();
+
+            // Create main application window, starting minimized if specified
+            DefaultWindow = ControlInversion.ResolveDependency<MainWindow>();
+            DefaultWindow.Show();
             base.OnStartup(e);
         }
     }

@@ -63,39 +63,25 @@ namespace SalesApplication.Domain.Business
 
             return soldProduct;
         }
-        public async Task<IActionResponse> Persist()
+        public async Task Persist()
         {
-            //Verifica se o cliente existe
-            //Customer customer = (await _customerRepository.Search(x => x.Id == CustomerId)).FirstOrDefault();
-            //if (customer == null)
-            //{
-            //    throw new EntityNotFoundException(ExceptionTexts.EntityNotFound(CustomerId.ToString()));
-            //}
-
-            //CustomerEntity = customer;
-
             await _productRepository.Save();
 
             CreatedAt = DateTime.Now;
             TotalPrice = Products.Sum(x => x.TotalPrice);
-            var result = await _saleRepository.Add(this);
+            await _saleRepository.Add(this);
 
-            Products.ForEach(x => {
-                x.SaleEntity = this;
-                x.SaleId = this.Id;
-            });
-
-            foreach (SoldProduct product in Products)
+            foreach (var product in Products)
             {
+                product.SaleEntity = this;
+                product.SaleId = Id;
                 await _soldProductRepository.Add(product);
             }
-
-            return result;
         }
         public async Task<bool> Exists(int saleId)
         {
             var result = (await _saleRepository.Search(x => x.Id == saleId)).FirstOrDefault();
-            return result.CustomerEntity != null;
+            return result != null;
         }
     }
 }

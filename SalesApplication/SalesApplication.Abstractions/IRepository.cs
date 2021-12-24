@@ -10,6 +10,6 @@ namespace SalesApplication.Abstractions
         public Task<bool> Save();
         public Task<IEnumerable<T>> Search();
         public Task<IEnumerable<T>> Search(Expression<Func<T, bool>> @where);
-        public Task<IActionResponse> Add(T entity);
+        public Task Add(T entity);
     }
 }
