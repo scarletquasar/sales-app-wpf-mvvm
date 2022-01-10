@@ -12,22 +12,20 @@
             <mah:Flyout 
                 Name="CreateSale" 
                 Header="Nova Venda"
-                d:DataContext="{d:DesignInstance Type=viewmodels:SalesViewModel}"
-                IsOpen="{Binding NewSaleFlyoutOpen}" 
-                Position="Right" 
+                Position="Right"
+                d:DataContext="{d:DesignInstance Type=viewmodels:SalesRegisterViewModel}"
                 Width="400">
                 <StackPanel Name="CreateSaleContainer">
                     <TextBlock Margin="8, 8, 8, 8">Adicionar Produto [Id/Quantidade]:</TextBlock>
                     <DockPanel Margin="8, 8, 8, 8" VerticalAlignment="Center">
-                        <TextBox Name="SaleProductId" Width="100"></TextBox>
-                        <TextBox Name="SaleProductQuantity" Width="100"></TextBox>
-                        <Button Click="TryRegisterProductInSale" Width="55">+</Button>
+                        <TextBox Name="SaleProductId" Text="{Binding SaleProductId}"  Width="100" />
+                        <TextBox Name="SaleProductQuantity" Text="{Binding SaleProductQuantity}" Width="100"></TextBox>
+                        <Button Command="{Binding TryAddProductCommand}" Width="55">+</Button>
                     </DockPanel>
                     <Viewbox Width="380">
                         <DataGrid
                             Name="ProductRegisterDataGrid"
                             ItemsSource="{Binding RegisterSaleProducts}"
-                            d:DataContext="{d:DesignInstance Type=viewmodels:SalesRegisterViewModel}"
                             AutoGenerateColumns="False"
                             Margin="8, 8, 8, 8"
                             >
@@ -41,8 +39,8 @@
                         </DataGrid>
                     </Viewbox>
                     <TextBlock Margin="8, 8, 8, 8">Id do Cliente:</TextBlock>
-                    <TextBox Margin="8, 8, 8, 8" HorizontalAlignment="Left" Name="SaleCustomerId" Width="200"></TextBox>
-                    <Button Margin="8, 8, 8, 8" Width="125" Click="FinishRegisteredSale">Finalizar Venda</Button>
+                    <TextBox Margin="8, 8, 8, 8" Text="{Binding SaleCustomerId}" HorizontalAlignment="Left" Name="SaleCustomerId" Width="200" />
+                    <Button Margin="8, 8, 8, 8" Width="125" Command="{Binding FinishSaleCommand}">Finalizar Venda</Button>
                 </StackPanel>
             </mah:Flyout>
         </mah:FlyoutsControl>

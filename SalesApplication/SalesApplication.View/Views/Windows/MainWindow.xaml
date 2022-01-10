@@ -24,7 +24,7 @@
                           Background="#E8E8E8" 
                           Height="498">
                         <local:Sales></local:Sales>
-                        <local:SalesRegister></local:SalesRegister>
+                        <local:SalesRegister x:Name="SalesRegisterArea"></local:SalesRegister>
                     </Grid>
                 </TabItem>
                 <TabItem Header="Produtos">
@@ -33,7 +33,7 @@
                           Background="#E8E8E8" 
                           Height="498">
                         <local:Products></local:Products>
-                        <local:ProductsRegister></local:ProductsRegister>
+                        <local:ProductsRegister x:Name="ProductsRegisterArea"></local:ProductsRegister>
                     </Grid>
                 </TabItem>
                 <TabItem Header="Clientes">
@@ -42,7 +42,7 @@
                           Background="#E8E8E8" 
                           Height="498">
                         <local:Customers></local:Customers>
-                        <local:CustomersRegister></local:CustomersRegister>
+                        <local:CustomersRegister x:Name="CustomersRegisterArea"></local:CustomersRegister>
                     </Grid>
                 </TabItem>
                 <TabItem Header="Relatórios">
@@ -50,9 +50,9 @@
                         <StackPanel>
                             <DockPanel VerticalAlignment="Top" HorizontalAlignment="Left" Height="50">
                                 <TextBlock Margin="8, 8, 8, 8">Data Inicial:</TextBlock>
-                                <TextBox Name="InitialSaleReportDate" Margin="8, 8, 8, 8" Width="75"></TextBox>
+                                <DatePicker Name="InitialSaleReportDate" Margin="8, 8, 8, 8" Width="75"></DatePicker>
                                 <TextBlock Margin="8, 8, 8, 8">Data Final:</TextBlock>
-                                <TextBox Name="FinalSaleReportDate" Margin="8, 8, 8, 8" Width="75"></TextBox>
+                                <DatePicker Name="FinalSaleReportDate" Margin="8, 8, 8, 8" Width="75"></DatePicker>
                                 <TextBlock Margin="8, 8, 8, 8">Id do Cliente:</TextBlock>
                                 <TextBox Name="SaleReportCustomerId" Margin="8, 8, 8, 8" Width="75"></TextBox>
                                 <Button Click="GenerateReport" Content="Gerar Relatório" Width="150"/>

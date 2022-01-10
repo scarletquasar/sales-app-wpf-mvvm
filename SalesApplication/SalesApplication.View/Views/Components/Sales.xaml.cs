@@ -15,6 +15,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using SalesApplication.View;
+using SalesApplication.View.Utils;
 
 namespace SalesApplication.View.Views.Components
 {
@@ -23,17 +24,15 @@ namespace SalesApplication.View.Views.Components
     /// </summary>
     public partial class Sales : UserControl
     {
-        private readonly SalesViewModel dataContext;
         public Sales()
         {
             InitializeComponent();
-            dataContext = ControlInversion.ResolveDependency<SalesViewModel>();
-            salesContainer.DataContext = dataContext;
+            salesContainer.DataContext = ControlInversion.ResolveDependency<SalesViewModel>();
         }
 
         public void OpenFlyout(object sender, RoutedEventArgs e)
         {
-            dataContext.NewSaleFlyoutOpen = true;
+            ParentUtil.GetWindow(this).SalesRegisterArea.CreateSale.IsOpen = true;
         }
     }
 }

@@ -6,6 +6,8 @@ using SalesApplication.Database;
 using SalesApplication.Domain.Business;
 using SalesApplication.View.Abstractions;
 using SalesApplication.View.ViewModels;
+using SalesApplication.Domain.Abstractions;
+using SalesApplication.Data.UnityOfWork;
 
 namespace SalesApplication.View.Services
 {
@@ -25,16 +27,23 @@ namespace SalesApplication.View.Services
         public static void RegisterDependencies()
         {
             /* Geral */
-            _builder.RegisterType<GeneralContext>().WithParameter(new TypedParameter(typeof(DbContextOptions<GeneralContext>), ContextOptions.Postgres())).InstancePerDependency();
-            _builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>)).InstancePerDependency();
-            _builder.RegisterType<DialogService>().As<IDialogService>().InstancePerDependency();
-            _builder.RegisterType<MainWindow>().AsSelf().InstancePerDependency();
+            _builder.RegisterType<GeneralContext>()
+                .WithParameter(new TypedParameter(typeof(DbContextOptions<GeneralContext>), ContextOptions.Postgres()))
+                .InstancePerDependency();
+            _builder.RegisterGeneric(typeof(Repository<>))
+                .As(typeof(IRepository<>))
+                .InstancePerDependency();
+            _builder.RegisterType<SaleProductUnityOfWork>()
+                .As(typeof(IUnitOfWork<Sale, Product>))
+                .InstancePerDependency();
+            _builder.RegisterType<DialogService>()
+                .As<IDialogService>()
+                .InstancePerDependency();
+            _builder.RegisterType<MainWindow>()
+                .AsSelf()
+                .InstancePerDependency();
 
             /* Repositórios */
-            _builder.RegisterType<Repository<Customer>>().As<IRepository<Customer>>().InstancePerDependency();
-            _builder.RegisterType<Repository<Product>>().As<IRepository<Product>>().InstancePerDependency();
-            _builder.RegisterType<Repository<Sale>>().As<IRepository<Sale>>().InstancePerDependency();
-            _builder.RegisterType<Repository<SoldProduct>>().As<IRepository<SoldProduct>>().InstancePerDependency();
             _builder.RegisterType<SaleRepository>().As<ISaleRepository>().InstancePerDependency();
 
             /* ViewModels */

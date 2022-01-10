@@ -2,7 +2,6 @@
 using Xunit;
 using SalesApplication.Domain.Business;
 using SalesApplication.Data.Repositories;
-using SalesApplication.Data.Responses;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using SalesApplication.Abstractions;
@@ -21,11 +20,7 @@ namespace SalesApplication.Tests
             var product = new Product("Produto de teste", 10.0, 9999, productRepository);
 
             //Test Operation
-            IActionResponse operationResult = await product.Persist();
-
-            //Asserts
-            Assert.NotNull(((ActionResponse)operationResult).Result);
-            Assert.True(((ActionResponse)operationResult).Success);
+            await product.Persist();
         }
 
         [Fact(DisplayName = "Deve obter com sucesso uma lista de produtos existentes")]

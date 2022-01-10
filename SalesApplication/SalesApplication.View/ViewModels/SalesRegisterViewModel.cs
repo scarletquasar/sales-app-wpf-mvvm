@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SalesApplication.Abstractions;
 using SalesApplication.Domain.Business;
-using SalesApplication.Domain.Visualization;
+using SalesApplication.View.Visualization;
 using SalesApplication.View.Abstractions;
 using System;
 using System.Collections.ObjectModel;
@@ -9,34 +9,33 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using Prism.Commands;
 
 namespace SalesApplication.View.ViewModels
 {
     public class SalesRegisterViewModel : INotifyPropertyChanged
     {
+        public DelegateCommand TryAddProductCommand { get; set; }
+        public DelegateCommand FinishSaleCommand { get; set; }
         public SalesRegisterViewModel(
-            IRepository<Sale> saleRepository,
-            IRepository<Product> productRepository,
-            IRepository<SoldProduct> soldProductRepository,
+            IUnitOfWork<Sale, Product> saleProductUnitOfWork,
             IRepository<Customer> customerRepository,
             IDialogService dialogService
         )
         {
-            _saleRepository = saleRepository;
-            _productRepository = productRepository;
-            _soldProductRepository = soldProductRepository;
+            _saleProductUnitOfWork = saleProductUnitOfWork;
             _customerRepository = customerRepository;
             _dialogService = dialogService;
+            TryAddProductCommand = new(TryAddProduct);
+            FinishSaleCommand = new(FinishSale);
         }
-        private readonly IRepository<Sale> _saleRepository;
-        private readonly IRepository<Product> _productRepository;
-        private readonly IRepository<SoldProduct> _soldProductRepository;
+        private readonly IUnitOfWork<Sale, Product> _saleProductUnitOfWork;
         private readonly IRepository<Customer> _customerRepository;
         private readonly IDialogService _dialogService;
 
         public event PropertyChangedEventHandler PropertyChanged;
-        private Sale registerSale;
         private ObservableCollection<ObservableProduct> registerSaleProducts;
+        private Sale registerSale;
         public Sale RegisterSale
         {
             get => registerSale;
@@ -46,6 +45,40 @@ namespace SalesApplication.View.ViewModels
                 OnPropertyChanged();
             }
         }
+
+        private int saleProductId;
+        public int SaleProductId
+        {
+            get => saleProductId;
+            set
+            {
+                saleProductId = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private int saleProductQuantity;
+        public int SaleProductQuantity
+        {
+            get => saleProductQuantity;
+            set
+            {
+                saleProductQuantity = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private int saleCustomerId;
+        public int SaleCustomerId
+        {
+            get => saleCustomerId;
+            set
+            {
+                saleCustomerId = value;
+                OnPropertyChanged();
+            }
+        }
+
         public ObservableCollection<ObservableProduct> RegisterSaleProducts
         {
             get => registerSaleProducts;
@@ -58,51 +91,33 @@ namespace SalesApplication.View.ViewModels
         public void Initialize()
         {
             registerSaleProducts = new();
-            RegisterSale = new Sale(0, _saleRepository, _productRepository, _soldProductRepository);
+            RegisterSale = new Sale(_saleProductUnitOfWork, _customerRepository);
         }
-        public async Task TryAddProduct(string id, string quantity)
+        public async void TryAddProduct()
         {
-            if (uint.TryParse(id, out uint numId) && uint.TryParse(quantity, out uint numQuantity))
+            try
             {
-                await RegisterSale.TryAddProduct((int)numId, (int)numQuantity);
+                await RegisterSale.TryAddProduct(SaleProductId, SaleProductQuantity);
                 ObservableProduct observableProduct = new();
-                await observableProduct.Populate((int)numId, _productRepository);
-                observableProduct.QuantidadeUsada = (int)numQuantity;
+                await observableProduct.Populate(SaleProductId, _saleProductUnitOfWork.Type2Repository);
+                observableProduct.QuantidadeUsada = SaleProductQuantity;
                 registerSaleProducts.Add(observableProduct);
             }
-        }
-        public async Task FinishSale(string customerId)
-        {
-            if (int.TryParse(customerId, out int targetCustomerId))
+            catch (Exception err)
             {
-                Customer targetCustomer = (await _customerRepository.Search(x => x.Id == targetCustomerId)).FirstOrDefault();
-
-                if(targetCustomer != null)
-                {
-                    RegisterSale.CustomerId = targetCustomer.Id;
-
-                    try
-                    {
-                        await RegisterSale.Persist();
-                        _dialogService.Show("Venda registrada com sucesso");
-                    }
-                    catch(DbUpdateException)
-                    {
-                        _dialogService.Show("Venda registrada com sucesso");
-                    }
-                    catch(Exception e)
-                    {
-                        _dialogService.Show(e.ToString());
-                    }
-                }
-                else
-                {
-                    _dialogService.Show("Verifique as informações do cliente inseridas");
-                }
+                _dialogService.Show(err.Message);
             }
-            else
+        }
+        public async void FinishSale()
+        {
+            try
             {
-                _dialogService.Show("Verifique as informações da venda inseridas");
+                await RegisterSale.Persist(saleCustomerId);
+                _dialogService.Show("Venda registrada com sucesso");
+            }
+            catch (Exception e)
+            {
+                _dialogService.Show(e.Message);
             }
         }
         protected void OnPropertyChanged([CallerMemberName] string name = null)

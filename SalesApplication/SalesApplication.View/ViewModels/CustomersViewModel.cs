@@ -1,7 +1,7 @@
 ﻿using Prism.Commands;
 using SalesApplication.Abstractions;
 using SalesApplication.Domain.Business;
-using SalesApplication.Domain.Visualization;
+using SalesApplication.View.Visualization;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -23,16 +23,6 @@ namespace SalesApplication.View.ViewModels
         }
 
         private readonly IRepository<Customer> _customerRepository;
-        private bool newCustomerFlyoutOpen;
-        public bool NewCustomerFlyoutOpen
-        {
-            get => newCustomerFlyoutOpen;
-            set
-            {
-                newCustomerFlyoutOpen = value;
-                OnPropertyChanged();
-            }
-        }
         public event PropertyChangedEventHandler PropertyChanged;
         private ObservableCollection<ObservableCustomer> customers;
         public ObservableCollection<ObservableCustomer> Customers
@@ -58,26 +48,20 @@ namespace SalesApplication.View.ViewModels
 
         public async void GetCustomers()
         {
-            List<Customer> rawCustomers;
-            ObservableCollection<ObservableCustomer> _obsCustomers = new();
+            IEnumerable<ObservableCustomer> rawCustomers = new List<ObservableCustomer>();
+            rawCustomers = (from c in await _customerRepository.Search()
+                            select new ObservableCustomer
+                            {
+                                Id = c.Id,
+                                Nome = c.Name
+                            });
 
             if (uint.TryParse(Search, out uint id))
             {
-                rawCustomers = (await _customerRepository.Search(x => x.Id == id)).ToList();
-            }
-            else
-            {
-                rawCustomers = (await _customerRepository.Search(x => x.Name.Contains(Search))).ToList();
+                rawCustomers = rawCustomers.Where(customer => customer.Id == id);
             }
 
-            foreach (Customer item in rawCustomers)
-            {
-                ObservableCustomer result = new();
-                await result.Populate(item.Id, _customerRepository);
-                _obsCustomers.Add(result);
-            }
-
-            Customers = _obsCustomers;
+            Customers = new ObservableCollection<ObservableCustomer>(rawCustomers.ToList());
         }
         protected void OnPropertyChanged([CallerMemberName] string name = null)
         {

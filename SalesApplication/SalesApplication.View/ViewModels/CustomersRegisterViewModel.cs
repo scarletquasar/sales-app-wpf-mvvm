@@ -1,14 +1,16 @@
 ﻿using SalesApplication.Abstractions;
 using SalesApplication.Domain.Business;
 using SalesApplication.View.Abstractions;
+using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
+using Prism.Commands;
 
 namespace SalesApplication.View.ViewModels
 {
     public class CustomersRegisterViewModel : INotifyPropertyChanged
     {
+        public DelegateCommand FinishCustomerCommand { get; set; }
         public CustomersRegisterViewModel(
             IRepository<Customer> customerRepository,
             IDialogService dialogService
@@ -16,6 +18,7 @@ namespace SalesApplication.View.ViewModels
         {
             _dialogService = dialogService;
             _customerRepository = customerRepository;
+            FinishCustomerCommand = new(FinishCustomer);
         }
         private IDialogService _dialogService;
         public event PropertyChangedEventHandler PropertyChanged;
@@ -30,26 +33,39 @@ namespace SalesApplication.View.ViewModels
                 OnPropertyChanged();
             }
         }
-        public async Task FinishCustomer(string name)
+
+        private string customerName;
+        public string CustomerName
         {
-            if(name == "")
+            get => customerName;
+            set
             {
-                _dialogService.Show("O nome do cliente não pode ser vazio");
+                customerName = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public async void FinishCustomer()
+        {
+            try
+            {
+                RegisterCustomer = new Customer(CustomerName, _customerRepository);
+            }
+            catch(Exception e)
+            {
+                _dialogService.Show(e.Message);
                 return;
             }
-
-            RegisterCustomer = new Customer(name, _customerRepository);
 
             try
             {
                 await RegisterCustomer.Persist();
                 _dialogService.Show("Cliente registrado com sucesso");
             }
-            catch
+            catch(Exception e)
             {
-                _dialogService.Show("Ocorreu um erro ao registrar o cliente");
+                _dialogService.Show(e.Message);
             }
-            return;
         }
         protected void OnPropertyChanged([CallerMemberName] string name = null)
         {

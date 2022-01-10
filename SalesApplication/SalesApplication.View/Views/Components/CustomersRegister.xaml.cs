@@ -22,20 +22,10 @@ namespace SalesApplication.View.Views.Components
     /// </summary>
     public partial class CustomersRegister : UserControl
     {
-        private readonly CustomersRegisterViewModel _customersRegisterViewModel;
-        private readonly CustomersViewModel _customersViewModel;
         public CustomersRegister()
         {
             InitializeComponent();
-            _customersRegisterViewModel = ControlInversion.ResolveDependency<CustomersRegisterViewModel>();
-            _customersViewModel = ControlInversion.ResolveDependency<CustomersViewModel>();
-
-            CreateCustomer.DataContext = _customersViewModel;
-            CreateCustomerContainer.DataContext = _customersRegisterViewModel;
-        }
-        private async void FinishRegisteredCustomer(object sender, RoutedEventArgs e)
-        {
-            await _customersRegisterViewModel.FinishCustomer(CustomerName.Text);
+            CreateCustomerContainer.DataContext = ControlInversion.ResolveDependency<CustomersRegisterViewModel>();
         }
     }
 }

@@ -1,12 +1,11 @@
 ﻿using System;
 using Xunit;
 using SalesApplication.Domain.Business;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using SalesApplication.Abstractions;
 using SalesApplication.Data.Repositories;
 using SalesApplication.Database;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace SalesApplication.Tests
 {
@@ -34,11 +33,15 @@ namespace SalesApplication.Tests
             );
 
             var addProductToSale = await sale.TryAddProduct(product.Id, product.Stock);
-            await sale.Persist();
+
+            try
+            {
+                await sale.Persist();
+            }
+            catch (DbUpdateException) { }
 
             //Asserts
             Assert.True((await saleRepository.Search(x => x == sale)).FirstOrDefault().Products.Count == 1);
-
         }
     }
 }

@@ -2,7 +2,6 @@ using System;
 using Xunit;
 using SalesApplication.Domain.Business;
 using SalesApplication.Data.Repositories;
-using SalesApplication.Data.Responses;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using SalesApplication.Abstractions;
@@ -20,12 +19,7 @@ namespace SalesApplication.Tests
             IRepository<Customer> customerRepository = new Repository<Customer>(new GeneralContext(ContextOptions.InMemory()));
             var customer = new Customer("Cliente de teste", customerRepository);
 
-            //Test Operation
-            IActionResponse operationResult = await customer.Persist();
-
-            //Asserts
-            Assert.NotNull(((ActionResponse)operationResult).Result);
-            Assert.True(((ActionResponse)operationResult).Success);
+            await customer.Persist();
         }
 
         [Fact(DisplayName = "Deve obter com sucesso uma lista de clientes existentes")]

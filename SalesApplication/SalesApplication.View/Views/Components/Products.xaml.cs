@@ -1,4 +1,5 @@
 ﻿using SalesApplication.View.Services;
+using SalesApplication.View.Utils;
 using SalesApplication.View.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -22,17 +23,15 @@ namespace SalesApplication.View.Views.Components
     /// </summary>
     public partial class Products : UserControl
     {
-        private readonly ProductsViewModel dataContext;
         public Products()
         {
             InitializeComponent();
-            dataContext = ControlInversion.ResolveDependency<ProductsViewModel>();
-            productsContainer.DataContext = dataContext;
+            productsContainer.DataContext = ControlInversion.ResolveDependency<ProductsViewModel>();
         }
 
         public void OpenFlyout(object sender, RoutedEventArgs e)
         {
-            dataContext.NewProductFlyoutOpen = true;
+            ParentUtil.GetWindow(this).ProductsRegisterArea.CreateProduct.IsOpen = true;
         }
     }
 }

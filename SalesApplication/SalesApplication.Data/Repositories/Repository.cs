@@ -14,9 +14,11 @@ namespace SalesApplication.Data.Repositories
     public class Repository<T> : IRepository<T> where T : class
     {
         private GeneralContext _context;
+        DbSet<T> _dbSet;
         public Repository(GeneralContext context)
         {
             _context = context;
+            _dbSet = _context.Set<T>();
         }
         public async Task<bool> Save()
         {
@@ -24,21 +26,22 @@ namespace SalesApplication.Data.Repositories
         }
         public async Task<IEnumerable<T>> Search()
         {
-            return await _context.Set<T>().ToListAsync();
+            return await _dbSet.ToListAsync();
         }
         public async Task<IEnumerable<T>> Search(Expression<Func<T, bool>> @where)
         {
-            return await _context.Set<T>().Where(@where).ToListAsync();
+            return await _dbSet.Where(@where).ToListAsync();
         }
         public async Task Add(T entity)
         {
-            await _context.Set<T>().AddAsync(entity);
+            await _dbSet.AddAsync(entity);
             await Save();
         }
 
-        public void Dispose()
+        public async Task Update(T entity)
         {
-            _context.Dispose();
+            _dbSet.Update(entity);
+            await Save();
         }
     }
 }

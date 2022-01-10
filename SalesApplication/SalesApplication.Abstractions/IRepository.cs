@@ -11,5 +11,6 @@ namespace SalesApplication.Abstractions
         public Task<IEnumerable<T>> Search();
         public Task<IEnumerable<T>> Search(Expression<Func<T, bool>> @where);
         public Task Add(T entity);
+        public Task Update(T entity);
     }
 }

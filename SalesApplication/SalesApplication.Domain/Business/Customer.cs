@@ -2,6 +2,8 @@
 using System.Linq;
 using System.Threading.Tasks;
 using SalesApplication.Abstractions;
+using SalesApplication.Domain.Exceptions;
+using SalesApplication.Domain.Hardcodes;
 
 namespace SalesApplication.Domain.Business
 {
@@ -9,21 +11,26 @@ namespace SalesApplication.Domain.Business
     {
         private readonly IRepository<Customer> _customerRepository;
         public int Id { get; set; }
-        public string Name { get; set; }
-        public Customer() { }
+        public string Name { get; private set; }
+        private Customer() { }
         public Customer(string name, IRepository<Customer> customerRepository)
         {
-            this._customerRepository = customerRepository;
-            this.Name = name;
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                throw new OperationNotValidException("O nome do cliente não pode ser vazio");
+            }
+
+            _customerRepository = customerRepository;
+            Name = name;
         }
         public async Task Persist()
         {
             await _customerRepository.Add(this);
         }
+
         public async Task<bool> Exists(int customerId)
         {
-            var result = (await _customerRepository.Search(x => x.Id == customerId)).FirstOrDefault();
-            return result.Name != null;
+            return (await _customerRepository.Search(x => x.Id == customerId)).FirstOrDefault() != null;
         }
     }
 }

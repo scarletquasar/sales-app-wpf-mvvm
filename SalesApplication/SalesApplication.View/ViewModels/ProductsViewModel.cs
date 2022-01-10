@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using SalesApplication.Domain.Visualization;
+using SalesApplication.View.Visualization;
 using System.Runtime.CompilerServices;
 using System.ComponentModel;
 using Prism.Commands;
@@ -22,17 +22,6 @@ namespace SalesApplication.View.ViewModels
             GetProductsCommand = new(GetProducts);
         }
         private readonly IRepository<Product> _productRepository;
-        private bool newProductFlyoutOpen;
-        public bool NewProductFlyoutOpen
-        {
-            get => newProductFlyoutOpen;
-            set
-            {
-                newProductFlyoutOpen = value;
-                OnPropertyChanged();
-            }
-        }
-
         private ObservableCollection<ObservableProduct> products;
         public event PropertyChangedEventHandler PropertyChanged;
         public ObservableCollection<ObservableProduct> Products
@@ -58,26 +47,26 @@ namespace SalesApplication.View.ViewModels
 
         public async void GetProducts()
         {
-            List<Product> rawProducts;
-            ObservableCollection<ObservableProduct> _obsProducts = new();
+            IEnumerable<ObservableProduct> rawProducts = new List<ObservableProduct>();
+            rawProducts = (from p in await _productRepository.Search()
+                           select new ObservableProduct
+                           {
+                               Id = p.Id,
+                               Descrição = p.Description,
+                               Preço = p.Price,
+                               Estoque = p.Stock
+                           });
 
             if (uint.TryParse(Search, out uint id))
             {
-                rawProducts = (await _productRepository.Search(x => x.Id == id)).ToList();
+                rawProducts = rawProducts.Where(x => x.Id == id);
             }
             else
             {
-                rawProducts = (await _productRepository.Search(x => x.Description.Contains(Search))).ToList();
+                rawProducts = rawProducts.Where(x => x.Descrição.Contains(Search));
             }
 
-            foreach (Product item in rawProducts)
-            {
-                ObservableProduct result = new();
-                await result.Populate(item.Id, _productRepository);
-                _obsProducts.Add(result);
-            }
-
-            Products = _obsProducts;
+            Products = new ObservableCollection<ObservableProduct>(rawProducts);
             OnPropertyChanged();
         }
         protected void OnPropertyChanged([CallerMemberName] string name = null)

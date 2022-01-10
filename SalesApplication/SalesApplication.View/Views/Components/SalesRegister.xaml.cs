@@ -23,37 +23,10 @@ namespace SalesApplication.View.Views.Components
     /// </summary>
     public partial class SalesRegister : UserControl
     {
-        private readonly SalesRegisterViewModel _salesRegisterViewModel;
-        private readonly SalesViewModel _salesViewModel;
-        private readonly IDialogService _dialogService;
-
         public SalesRegister()
         {
             InitializeComponent();
-
-            _salesRegisterViewModel = ControlInversion.ResolveDependency<SalesRegisterViewModel>();
-            _salesViewModel = ControlInversion.ResolveDependency<SalesViewModel>();
-            _dialogService = ControlInversion.ResolveDependency<IDialogService>();
-
-            CreateSale.DataContext = _salesViewModel;
-            CreateSaleContainer.DataContext = _salesRegisterViewModel;
-        }
-
-        private async void TryRegisterProductInSale(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                await _salesRegisterViewModel.TryAddProduct(SaleProductId.Text, SaleProductQuantity.Text);
-            }
-            catch(Exception err)
-            {
-                _dialogService.Show(err.Message);
-            }
-        }
-
-        private async void FinishRegisteredSale(object sender, RoutedEventArgs e)
-        {
-            await _salesRegisterViewModel.FinishSale(SaleCustomerId.Text);
+            CreateSaleContainer.DataContext = ControlInversion.ResolveDependency<SalesRegisterViewModel>();
         }
     }
 }

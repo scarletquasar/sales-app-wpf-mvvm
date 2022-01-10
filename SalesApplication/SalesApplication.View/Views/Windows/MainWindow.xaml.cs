@@ -18,6 +18,7 @@ using SalesApplication.Domain.Business;
 using SalesApplication.View.Models;
 using SalesApplication.View.Services;
 using SalesApplication.View.ViewModels;
+using SalesApplication.Domain.Abstractions;
 
 namespace SalesApplication.View
 {
@@ -41,11 +42,26 @@ namespace SalesApplication.View
 
         private async void GenerateReport(object sender, RoutedEventArgs e)
         {
-            SaleReportTarget.NavigateToString(await SalesReport.ExportReportAsync(
-                InitialSaleReportDate.Text,
-                FinalSaleReportDate.Text,
-                SaleReportCustomerId.Text,
-                _reportableSaleRepository));
+            int.TryParse(SaleReportCustomerId.Text, out int customerId);
+
+            SalesReport report = new(
+                _reportableSaleRepository,
+                InitialSaleReportDate.SelectedDate ?? DateTime.Now,
+                FinalSaleReportDate.SelectedDate ?? DateTime.Now,
+                customerId);
+
+            string reportContent;
+
+            try
+            {
+                reportContent = await report.ExportReportAsync();
+            }
+            catch(Exception error)
+            {
+                reportContent = error.Message;
+            }
+
+            SaleReportTarget.NavigateToString(reportContent);
         }
     }
 }
