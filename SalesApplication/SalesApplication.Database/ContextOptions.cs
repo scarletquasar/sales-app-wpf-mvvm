@@ -8,7 +8,7 @@ namespace SalesApplication.Database
     {
         public static DbContextOptions<GeneralContext> Postgres()
         {
-            var connectionStringBuilder = new NpgsqlConnectionStringBuilder()
+            NpgsqlConnectionStringBuilder connectionStringBuilder = new()
             {
                 Host = "localhost",
                 Port = 5432,

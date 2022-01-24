@@ -8,10 +8,14 @@
         xmlns:local="clr-namespace:SalesApplication.View.Views.Components"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
-        Title="Sistema de gerenciamento de vendas" Height="480" Width="640">
-    <Viewbox VerticalAlignment="Top" HorizontalAlignment="Left">
-        <Grid Width="720" Height="480">
-            <TabControl>
+        Title="Sistema de gerenciamento de vendas" Height="480" Width="660">
+    <Viewbox Stretch="UniformToFill" VerticalAlignment="Top" HorizontalAlignment="Left">
+        <Grid Width="740" Height="480">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="211*"/>
+                <ColumnDefinition Width="29*"/>
+            </Grid.ColumnDefinitions>
+            <TabControl Grid.ColumnSpan="2">
                 <TabControl.Resources>
                     <Style TargetType="{x:Type TabItem}">
                         <Setter Property="FontFamily" Value="Trebuchet MS" />
@@ -24,7 +28,7 @@
                           Background="#E8E8E8" 
                           Height="498">
                         <local:Sales></local:Sales>
-                        <local:SalesRegister x:Name="SalesRegisterArea"></local:SalesRegister>
+                        <local:SalesRegister x:Name="SalesRegisterArea" Margin="0,0,54,42"></local:SalesRegister>
                     </Grid>
                 </TabItem>
                 <TabItem Header="Produtos">

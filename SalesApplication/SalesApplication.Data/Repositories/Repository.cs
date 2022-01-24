@@ -13,8 +13,8 @@ namespace SalesApplication.Data.Repositories
 {
     public class Repository<T> : IRepository<T> where T : class
     {
-        private GeneralContext _context;
-        DbSet<T> _dbSet;
+        private readonly GeneralContext _context;
+        private readonly DbSet<T> _dbSet;
         public Repository(GeneralContext context)
         {
             _context = context;

@@ -1,20 +1,19 @@
-﻿using Microsoft.EntityFrameworkCore;
-using SalesApplication.Abstractions;
+﻿using SalesApplication.Abstractions;
 using SalesApplication.Domain.Business;
 using SalesApplication.View.Visualization;
 using SalesApplication.View.Abstractions;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
 using Prism.Commands;
 
 namespace SalesApplication.View.ViewModels
 {
+    public delegate void InsertedSale();
     public class SalesRegisterViewModel : INotifyPropertyChanged
     {
+        public static event InsertedSale OnSaleInserted = delegate { };
         public DelegateCommand TryAddProductCommand { get; set; }
         public DelegateCommand FinishSaleCommand { get; set; }
         public SalesRegisterViewModel(
@@ -112,7 +111,17 @@ namespace SalesApplication.View.ViewModels
         {
             try
             {
-                await RegisterSale.Persist(saleCustomerId);
+                RegisterSale.CustomerId = saleCustomerId;
+                await RegisterSale.Persist();
+                OnSaleInserted();
+
+                /* Realiza o reset dos dados da ViewModel */
+                RegisterSale = new Sale(_saleProductUnitOfWork, _customerRepository);
+                SaleProductId = default;
+                SaleCustomerId = default;
+                RegisterSaleProducts = new();
+                SaleProductQuantity = default;
+
                 _dialogService.Show("Venda registrada com sucesso");
             }
             catch (Exception e)

@@ -1,16 +1,11 @@
-﻿using MahApps.Metro.Controls;
-using SalesApplication.Abstractions;
+﻿using SalesApplication.Abstractions;
 using SalesApplication.Domain.Business;
 using SalesApplication.View.Visualization;
-using SalesApplication.View.Services;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using Prism.Commands;
 using SalesApplication.Domain.Abstractions;
 
@@ -26,6 +21,7 @@ namespace SalesApplication.View.ViewModels
             _customerRepository = customerRepository;
             GetSalesCommand = new(() => GetSales(false));
             GetSalesByCustomerCommand = new(() => GetSales(true));
+            SalesRegisterViewModel.OnSaleInserted += () => GetSales(true);
         }
 
         private readonly ISaleRepository _saleRepository;
@@ -57,7 +53,7 @@ namespace SalesApplication.View.ViewModels
         {
             IEnumerable<ObservableSale> rawSales = new List<ObservableSale>();
             rawSales = (from s in await _saleRepository.Search()
-                        join c in (await _customerRepository.Search()) on s.CustomerId equals c.Id
+                        join c in await _customerRepository.Search() on s.CustomerId equals c.Id
                         select new ObservableSale
                         {
                             Id = s.Id,
@@ -69,11 +65,17 @@ namespace SalesApplication.View.ViewModels
 
             if (!byCostumerId)
             {
-                if (uint.TryParse(Search, out uint id)) rawSales = rawSales.Where(sale => sale.Id == id);
+                if(uint.TryParse(Search, out uint id))
+                {
+                    rawSales = rawSales.Where(sale => sale.Id == id);
+                }
             }
             else
             {
-                if (uint.TryParse(Search, out uint id)) rawSales = rawSales.Where(sale => sale.IdCliente == id);
+                if(uint.TryParse(Search, out uint id))
+                {
+                    rawSales = rawSales.Where(sale => sale.IdCliente == id);
+                }
             }
 
             Sales = new ObservableCollection<ObservableSale>(rawSales.ToList());

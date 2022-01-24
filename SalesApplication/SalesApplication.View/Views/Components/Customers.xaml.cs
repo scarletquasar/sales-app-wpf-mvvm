@@ -8,7 +8,7 @@ using SalesApplication.View.Utils;
 namespace SalesApplication.View.Views.Components
 {
     /// <summary>
-    /// Interação lógica para Customers.xam
+    /// Interação lógica para Customers.xaml
     /// </summary>
     public partial class Customers : UserControl
     {

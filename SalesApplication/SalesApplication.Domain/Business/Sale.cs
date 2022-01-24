@@ -14,43 +14,47 @@ namespace SalesApplication.Domain.Business
         private readonly IRepository<Customer> _customerRepository;
         private readonly IUnitOfWork<Sale, Product> _saleProductUnitOfWork;
         public int Id { get; set; }
-        public List<SoldProduct> Products { get; set; }
+        public IReadOnlyCollection<SoldProduct> Products { get; private set; }
         public DateTime CreatedAt { get; private set; }
         public Customer CustomerEntity { get; set; }
         public int CustomerId { get; set; }
         public double TotalPrice { get; private set; }
         private Sale() { }
         public Sale(
-            IUnitOfWork<Sale, Product> saleProductUnitOfWork, 
+            IUnitOfWork<Sale, Product> saleProductUnitOfWork,
             IRepository<Customer> customerRepository)
         {
             _saleProductUnitOfWork = saleProductUnitOfWork;
             _customerRepository = customerRepository;
-            Products = new();
+            Products = new List<SoldProduct>();
         }
         public Sale(
-            int customerId, 
-            IUnitOfWork<Sale, Product> saleProductUnitOfWork, 
+            int customerId,
+            IUnitOfWork<Sale, Product> saleProductUnitOfWork,
             IRepository<Customer> customerRepository)
         {
-            CustomerId = customerId;
             _saleProductUnitOfWork = saleProductUnitOfWork;
             _customerRepository = customerRepository;
-            Products = new();
+            CustomerId = customerId;
+            Products = new List<SoldProduct>();
         }
 
         public async Task<SoldProduct> TryAddProduct(int productId, int quantity)
         {
-            SoldProduct soldProduct = await SellProduct(productId, quantity);
-            Products.Add(soldProduct);
+            SoldProduct operationSoldProduct = await SellProduct(productId, quantity);
+
+            List<SoldProduct> products = (List<SoldProduct>)Products;
+            products.Add(operationSoldProduct);
+            Products = products;
+
             CalculateTotalPrice();
-            return soldProduct;
+            return operationSoldProduct;
         }
 
         public async Task<SoldProduct> SellProduct(int productId, int productQuantity)
         {
             SoldProduct soldProduct = new();
-            Product product = (await _saleProductUnitOfWork.Type2Repository.Search(x => x.Id == productId)).FirstOrDefault();
+            Product product = (await _saleProductUnitOfWork.Type2Repository.Search(x => x.Id.Equals(productId))).FirstOrDefault();
             bool productExits = product != null;
             if (!productExits) throw new EntityNotFoundException(ExceptionTexts.EntityNotFound(productId.ToString()));
 
@@ -58,7 +62,7 @@ namespace SalesApplication.Domain.Business
             if (product.Stock < productQuantity)
             {
                 throw new OperationNotValidException(ExceptionTexts.NoStockAvailable(product.Description));
-            } 
+            }
 
             soldProduct.TotalPrice = product.Price * productQuantity;
             soldProduct.ProductId = product.Id;
@@ -74,23 +78,24 @@ namespace SalesApplication.Domain.Business
             TotalPrice = Products.Sum(x => x.TotalPrice);
         }
 
-        public async Task Persist(int customerId)
+        public async Task Persist()
         {
-            Customer targetCustomer = (await _customerRepository.Search(x => x.Id == customerId)).FirstOrDefault();
+            Customer targetCustomer = (await _customerRepository.Search(x => x.Id.Equals(CustomerId))).FirstOrDefault();
 
             if (targetCustomer == null)
-                throw new ArgumentException("Verifique as informações do cliente inseridas");
-
-            CustomerId = customerId;
+                throw new ArgumentException($"Não foi possível executar a venda. O cliente de ID {CustomerId} não existe ou não pôde ser recuperado.");
 
             await _saleProductUnitOfWork.BeginTransaction();
+
             try
             {
                 CreatedAt = DateTime.Now;
                 await _saleProductUnitOfWork.Type1Repository.Add(this);
 
-                foreach (var soldProduct in Products)
+                foreach (SoldProduct soldProduct in Products)
+                {
                     await _saleProductUnitOfWork.Type2Repository.Update(soldProduct.ProductEntity);
+                }
 
                 await _saleProductUnitOfWork.Type1Repository.Save();
                 await _saleProductUnitOfWork.Commit();
@@ -98,12 +103,8 @@ namespace SalesApplication.Domain.Business
             catch (Exception e)
             {
                 await _saleProductUnitOfWork.Rollback();
-                throw new Exception(e.Message);
+                throw new ApplicationException(e.Message);
             }
         }
-        public async Task<bool> Exists(int saleId)
-        {
-            return (await _saleProductUnitOfWork.Type1Repository.Search(x => x.Id == saleId)).FirstOrDefault() != null;
-        }    
     }
 }

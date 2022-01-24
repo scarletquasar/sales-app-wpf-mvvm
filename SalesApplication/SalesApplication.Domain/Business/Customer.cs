@@ -16,9 +16,7 @@ namespace SalesApplication.Domain.Business
         public Customer(string name, IRepository<Customer> customerRepository)
         {
             if (string.IsNullOrWhiteSpace(name))
-            {
                 throw new OperationNotValidException("O nome do cliente não pode ser vazio");
-            }
 
             _customerRepository = customerRepository;
             Name = name;
@@ -26,11 +24,6 @@ namespace SalesApplication.Domain.Business
         public async Task Persist()
         {
             await _customerRepository.Add(this);
-        }
-
-        public async Task<bool> Exists(int customerId)
-        {
-            return (await _customerRepository.Search(x => x.Id == customerId)).FirstOrDefault() != null;
         }
     }
 }

@@ -20,6 +20,7 @@ namespace SalesApplication.View.ViewModels
         {
             _customerRepository = customerRepository;
             GetCustomersCommand = new(GetCustomers);
+            CustomersRegisterViewModel.OnCustomerInserted += GetCustomers;
         }
 
         private readonly IRepository<Customer> _customerRepository;
@@ -59,6 +60,10 @@ namespace SalesApplication.View.ViewModels
             if (uint.TryParse(Search, out uint id))
             {
                 rawCustomers = rawCustomers.Where(customer => customer.Id == id);
+            }
+            else if(!string.IsNullOrWhiteSpace(Search))
+            {
+                rawCustomers = rawCustomers.Where(customer => customer.Nome.Contains(Search));
             }
 
             Customers = new ObservableCollection<ObservableCustomer>(rawCustomers.ToList());

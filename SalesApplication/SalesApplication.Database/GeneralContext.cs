@@ -10,7 +10,7 @@ namespace SalesApplication.Database
         public DbSet<Product> Products { get; set; }
         public DbSet<Sale> Sales { get; set; }
         public DbSet<SoldProduct> SoldProducts { get; set; }
-        private void CustomerConfig(ModelBuilder modelBuilder)
+        private static void CustomerConfig(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Customer>(entity =>
             {
@@ -21,7 +21,7 @@ namespace SalesApplication.Database
             });
         }
 
-        private void ProductConfig(ModelBuilder modelBuilder)
+        private static void ProductConfig(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Product>(entity =>
             {
@@ -34,7 +34,7 @@ namespace SalesApplication.Database
             });
         }
 
-        private void SaleConfig(ModelBuilder modelBuilder)
+        private static void SaleConfig(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Sale>(entity =>
             {
@@ -49,7 +49,7 @@ namespace SalesApplication.Database
             });
         }
 
-        private void SoldProductConfig(ModelBuilder modelBuilder)
+        private static void SoldProductConfig(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<SoldProduct>(entity =>
             {

@@ -7,13 +7,11 @@ namespace SalesApplication.View.Services
     {
         public DialogResult Show(string messageText)
         {
-            MessageBox.Show(messageText);
-            return DialogResult.OK;
+            return MessageBox.Show(messageText);
         }
         public DialogResult Show(string messageText, string caption)
         {
-            MessageBox.Show(messageText, caption);
-            return DialogResult.OK;
+            return MessageBox.Show(messageText, caption);
         }
     }
 }

@@ -1,6 +1,4 @@
-﻿using SalesApplication.Abstractions;
-using SalesApplication.Domain.Business;
-using SalesApplication.View.Visualization;
+﻿using SalesApplication.Domain.Business;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +13,11 @@ namespace SalesApplication.View.Models
 {
     public class SalesReport
     {
-        public SalesReport(ISaleRepository saleRepository, DateTime initialDate, DateTime finalDate, int customerId)
+        public SalesReport(
+            ISaleRepository saleRepository,
+            DateTime initialDate,
+            DateTime finalDate,
+            int customerId)
         {
             if (initialDate > finalDate) 
                 throw new ArgumentException("A data inicial não pode ser maior que a final");
@@ -36,11 +38,12 @@ namespace SalesApplication.View.Models
         public List<Sale> Sales { get; private set; }
         public async Task<string> ExportReportAsync()
         {
-            Sales = 
-                (await _saleRepository.SearchWithProducts(x => x.CreatedAt <= _finalDate && x.CreatedAt >= _initialDate))
+            Sales = (await _saleRepository.SearchWithProducts(x => x.CreatedAt <= _finalDate && x.CreatedAt >= _initialDate))
                 .ToList();
 
-            if(_customerId > 0) Sales = Sales.Where(x => x.CustomerId.Equals(_customerId)).ToList();
+            if(_customerId > 0) 
+                Sales = Sales.Where(x => x.CustomerId.Equals(_customerId)).ToList();
+
             if (Sales.Count > 0)
             {
                 Report fastReport = new();
@@ -48,16 +51,15 @@ namespace SalesApplication.View.Models
                 fastReport.RegisterData(new[] { this }, nameof(SalesReport), 10);
                 fastReport.GetDataSource(nameof(SalesReport)).Enabled = true;
                 //fastReport.Save(@"E:\salesReport.frx"); //--> Código direcionado apenas à alteração do design do relatório
-                fastReport.Prepare();
+                if(!fastReport.Prepare())
+                    throw new ApplicationException("Ocorreu um erro durante a preparação do relatório");
 
                 MemoryStream output = new();
                 fastReport.Export(new HTMLExport(), output);
                 return Encoding.ASCII.GetString(output.ToArray());
             }
-            else
-            {
-                throw new Exception("Nenhuma venda encontrada");
-            }
+
+            throw new ArgumentException("Nenhuma venda encontrada");
         }
     }
 }

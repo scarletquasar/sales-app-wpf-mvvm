@@ -23,7 +23,7 @@ namespace SalesApplication.Domain.Business
             int initialStock,
             IRepository<Product> productRepository)
         {
-            if (string.IsNullOrWhiteSpace(description)) 
+            if (string.IsNullOrWhiteSpace(description))
                 throw new OperationNotValidException(ExceptionTexts.ArgumentNotValid());
 
             Description = description;
@@ -31,8 +31,10 @@ namespace SalesApplication.Domain.Business
             Stock = initialStock;
             _productRepository = productRepository;
         }
-        public async Task Persist() => await _productRepository.Add(this);
-        public async Task<bool> Exists(int productId) =>
-            (await _productRepository.Search(x => x.Id == productId)).FirstOrDefault() != null;
+
+        public async Task Persist()
+        {
+            await _productRepository.Add(this);
+        }
     }
 }

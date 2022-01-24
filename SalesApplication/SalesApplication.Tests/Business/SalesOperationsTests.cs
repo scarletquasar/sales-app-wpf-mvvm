@@ -6,6 +6,7 @@ using SalesApplication.Data.Repositories;
 using SalesApplication.Database;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using SalesApplication.Data.UnityOfWork;
 
 namespace SalesApplication.Tests
 {
@@ -19,6 +20,7 @@ namespace SalesApplication.Tests
             Customer customer = new("Cliente de teste", customerRepository);
 
             IRepository<Product> productRepository = new Repository<Product>(new GeneralContext(ContextOptions.InMemory()));
+            IUnitOfWork<Sale, Product> saleProductUnitOfWork = new SaleProductUnityOfWork(new GeneralContext(ContextOptions.InMemory()));
             Product product = new("Produto de teste", 10.0, 9999, productRepository);
 
             await product.Persist();
@@ -27,9 +29,8 @@ namespace SalesApplication.Tests
             var sale = new Sale
             (
                 customer.Id,
-                saleRepository,
-                productRepository,
-                new Repository<SoldProduct>(new GeneralContext(ContextOptions.Postgres()))
+                saleProductUnitOfWork,
+                customerRepository
             );
 
             var addProductToSale = await sale.TryAddProduct(product.Id, product.Stock);

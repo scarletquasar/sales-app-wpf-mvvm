@@ -74,6 +74,13 @@ namespace SalesApplication.View.ViewModels
             try
             {
                 await RegisterProduct.Persist();
+
+                /* Realiza o reset dos dados da ViewModel */
+                RegisterProduct = default;
+                ProductStock = default;
+                ProductPrice = default;
+                ProductDescription = default;
+
                 _dialogService.Show("Produto registrado com sucesso");
             }
             catch(Exception e)

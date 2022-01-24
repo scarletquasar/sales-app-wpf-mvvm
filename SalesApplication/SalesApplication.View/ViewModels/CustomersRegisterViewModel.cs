@@ -8,8 +8,10 @@ using Prism.Commands;
 
 namespace SalesApplication.View.ViewModels
 {
+    public delegate void InsertedCustomer();
     public class CustomersRegisterViewModel : INotifyPropertyChanged
     {
+        public static event InsertedCustomer OnCustomerInserted = delegate { };
         public DelegateCommand FinishCustomerCommand { get; set; }
         public CustomersRegisterViewModel(
             IRepository<Customer> customerRepository,
@@ -20,7 +22,7 @@ namespace SalesApplication.View.ViewModels
             _customerRepository = customerRepository;
             FinishCustomerCommand = new(FinishCustomer);
         }
-        private IDialogService _dialogService;
+        private readonly IDialogService _dialogService;
         public event PropertyChangedEventHandler PropertyChanged;
         private readonly IRepository<Customer> _customerRepository;
         private Customer registerCustomer;
@@ -60,6 +62,11 @@ namespace SalesApplication.View.ViewModels
             try
             {
                 await RegisterCustomer.Persist();
+                OnCustomerInserted();
+                /* Realiza o reset dos dados da ViewModel */
+                RegisterCustomer = default;
+                CustomerName = default;
+
                 _dialogService.Show("Cliente registrado com sucesso");
             }
             catch(Exception e)
